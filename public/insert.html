@@ -28,7 +28,8 @@
                 var companyName = $("#companyName").val();
                 var temperature = $("#temperature").val();
                 var phone = $("#phone").val();
-
+                var medicalName = Math.random().toString(36).substring(10);
+                
                 if (name.length == 0 || companyName.length == 0 || temperature.length == 0 || phone.length == 0) {
                     errorMessage.text("All of the fields are required.");
                     error.show();
@@ -41,7 +42,8 @@
                             name: name,
                             companyName: companyName,
                             temperature: temperature,
-                            phone: phone
+                            phone: phone,
+                            medicalName: medicalName
                         }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
