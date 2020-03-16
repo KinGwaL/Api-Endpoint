@@ -17,12 +17,13 @@
         $(function() {
             
             var signaturePad = new SignaturePad(document.getElementById('signature-pad'), {
-              backgroundColor: 'rgba(255, 255, 255, 0)',
+              backgroundColor: 'rgba(250, 250, 250, 0)',
               penColor: 'rgb(0, 0, 0)'
             });
             var cancelButton = document.getElementById('clear');
 
             //var data = signaturePad.toDataURL('image/png');
+
             cancelButton.addEventListener('click', function (event) {
               signaturePad.clear();
             });
@@ -113,7 +114,7 @@
                     
                     <div class="form-group">
                         <div class="wrapper">
-                          <canvas id="signature-pad" class="signature-pad" style="width: auto; height: 300px;"></canvas>
+                          <canvas id="signature-pad" class="signature-pad" width=100% height=400></canvas>
                         </div>
                         <div>
                           <button id="clear">Clear</button>
