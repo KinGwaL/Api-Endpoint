@@ -46,13 +46,13 @@ app.post('/insert', function(req, res) {
         // watch for any connect issues
         if (err) console.log(err);
         conn.query(
-            'INSERT INTO salesforce.Medical__c (Name__c, Phone__c, Temperature__c, Company_Name__c) VALUES ($1, $2, $3, $4)',
-            [req.body.name.trim(), req.body.phone.trim(), req.body.temperature.trim(), req.body.companyName.trim()],
+            'INSERT INTO salesforce.Medical__c (Name__c, Phone__c, Temperature__c, Company_Name__c, Signature__c) VALUES ($1, $2, $3, $4, $5)',
+            [req.body.name.trim(), req.body.phone.trim(), req.body.temperature.trim(), req.body.companyName.trim(), req.body.dataURL.trim()],
             function(err, result) {
                 if (err != null || result.rowCount == 0) {
                   conn.query(
-            'INSERT INTO salesforce.Medical__c (Name__c, Phone__c, Temperature__c, Company_Name__c, Name) VALUES ($1, $2, $3, $4)',
-            [req.body.name.trim(), req.body.phone.trim(), req.body.temperature.trim(), req.body.companyName.trim()],
+            'INSERT INTO salesforce.Medical__c (Name__c, Phone__c, Temperature__c, Company_Name__c, Signature__c) VALUES ($1, $2, $3, $4, $5)',
+            [req.body.name.trim(), req.body.phone.trim(), req.body.temperature.trim(), req.body.companyName.trim(), req.body.dataURL.trim()],
                   function(err, result) {
                     done();
                     if (err) {
