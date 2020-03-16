@@ -20,10 +20,10 @@
               backgroundColor: 'rgba(245, 245, 245, 1)',
               penColor: 'rgb(0, 0, 0)'
             });
-            //var data = signaturePad.toDataURL('image/png');
 
             $("#clear").click(function (event) {
-              signaturePad.clear();
+               event.preventDefault();
+               signaturePad.clear();
             });
             
             $("#insertForm").submit(function(event) {
@@ -45,7 +45,7 @@
                     error.show();
                 }
                 else {
-                    var dataURL = signaturePad.toDataURL("image/jpeg");
+                    var dataURL = signaturePad.toDataURL();
                     $.ajax({
                         url: event.target.action,
                         method: event.target.method,
