@@ -49,24 +49,11 @@ app.post('/insert', function(req, res) {
             'INSERT INTO salesforce.Medical__c (Name__c, Phone__c, Temperature__c, Company_Name__c, Signature__c) VALUES ($1, $2, $3, $4, $5)',
             [req.body.name.trim(), req.body.phone.trim(), req.body.temperature.trim(), req.body.companyName.trim(), req.body.dataURL.trim()],
             function(err, result) {
-                if (err != null || result.rowCount == 0) {
-                  conn.query(
-            'INSERT INTO salesforce.Medical__c (Name__c, Phone__c, Temperature__c, Company_Name__c, Signature__c) VALUES ($1, $2, $3, $4, $5)',
-            [req.body.name.trim(), req.body.phone.trim(), req.body.temperature.trim(), req.body.companyName.trim(), req.body.dataURL.trim()],
-                  function(err, result) {
-                    done();
-                    if (err) {
-                        res.status(400).json({error: err.message});
-                    }
-                    else {
-                        // this will still cause jquery to display 'Record updated!'
-                        // eventhough it was inserted
-                        res.json(result);
-                    }
-                  });
+                done();
+                if (err) {
+                    res.status(400).json({error: err.message});
                 }
                 else {
-                    done();
                     res.json(result);
                 }
             }
