@@ -44,9 +44,10 @@ app.post('/update', function(req, res) {
 app.post('/search', function(req, res) {
     pg.connect(process.env.DATABASE_URL, function (err, conn, done) {
         // watch for any connect issues
+        
         if (err) console.log(err);
         conn.query(
-            'SELECT * FROM salesforce.Medical__c WHERE Name__c LIKE $1 AND Company_Name__c LIKE $2 AND Phone__c LIKE $3',
+            'SELECT * FROM salesforce.Medical__c WHERE (Name__c = $1 OR $1 IS NULL) AND (Company_Name__c = $2 OR $2 IS NULL) AND (Phone__c = $3 OR $3 IS NULL)',
             [req.body.name.trim(), req.body.companyName.trim(), req.body.phone.trim()],
             function(err, result) {
                 done();
