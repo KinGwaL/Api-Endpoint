@@ -41,6 +41,27 @@ app.post('/update', function(req, res) {
     });
 });
 
+app.post('/search', function(req, res) {
+    pg.connect(process.env.DATABASE_URL, function (err, conn, done) {
+        // watch for any connect issues
+        SELECT * FROM customers
+        if (err) console.log(err);
+        conn.query(
+            'SELECT * FROM salesforce.Medical__c WHERE Name__c = $1 AND Company_Name__c = $2 AND Phone__c = $3',
+            [req.body.name.trim(), req.body.companyName.trim(), req.body.phone.trim()],
+            function(err, result) {
+                done();
+                if (err) {
+                    res.status(400).json({error: err.message});
+                }
+                else {
+                    res.json(result);
+                }
+            }
+        );
+    });
+});
+
 app.post('/insert', function(req, res) {
     pg.connect(process.env.DATABASE_URL, function (err, conn, done) {
         // watch for any connect issues
