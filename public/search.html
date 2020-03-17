@@ -44,7 +44,7 @@
                             var rows = data.rows;
                             $("#contentTable tbody tr").remove();
                             for(var i=0; i< rows.length; i++) {
-                                var row = document.getElementById("contentTable").insertRow(1);
+                                var row = document.getElementById("contentTable").insertRow(-1);
                                 var rowData = rows[i];
                                 var cell1 = row.insertCell(0);
                                 var cell2 = row.insertCell(1);
@@ -52,7 +52,7 @@
                                 var cell4 = row.insertCell(3);
                                 var cell5 = row.insertCell(4);
                                 
-                                cell1.innerHTML = i.toString();
+                                cell1.innerHTML = rowData.Name;
                                 cell2.innerHTML = rowData.name__c;
                                 cell3.innerHTML = rowData.company_name__c;
                                 cell4.innerHTML = rowData.phone__c;
