@@ -75,24 +75,22 @@
     <div class="container">
         <form id="searchForm" action="/search" method="post" style="width: auto;">
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="form-row">
-                        <div class="col-2">
+                <div class="panel-heading form-row">
+                   <div class="col">
                           <input type="text" class="form-control" id="name" placeholder="Full Name">
                         </div>
-                        <div class="col-2">
+                        <div class="col">
                           <input type="text" class="form-control" id="companyName" placeholder="Company">
                         </div>
-                        <div class="col-2">
+                        <div class="col">
                           <input type="tel" class="form-control" id="phone" placeholder="Mobile" required>
                         </div>
                         <div class="col">
                           <button class="btn btn-outline-success" type="submit">Search</button>
                         </div>
-                    </div>
                 </div>
                 <div class="panel-body">
-                    <table class="table table-striped">
+                    <table class="table table-striped" id="contentTable">
                       <thead>
                         <tr>
                           <th scope="col">#</th>
@@ -107,6 +105,7 @@
                           <th scope="row">1</th>
                           <td>Mark</td>
                           <td>Otto</td>
+                          <td>@mdo</td>
                           <td>@mdo</td>
                         </tr>
                       </tbody>
