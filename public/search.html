@@ -20,16 +20,13 @@
                 var errorMessage = $("#errorMessage");
                 var error = $("#error");
                 error.hide();
-
-                $("#message").hide();
-
-                var firstName = $("#firstName").val();
-                var lastName = $("#lastName").val();
-                var email = $("#email").val();
+                
+                var name = $("#name").val();
+                var companyName = $("#companyName").val();
                 var phone = $("#phone").val();
 
-                if (firstName.length == 0 || lastName.length == 0 || email.length == 0 || phone.length == 0) {
-                    errorMessage.text("All of the fields are required.");
+                if (name.length == 0 && companyName.length == 0 && phone.length == 0) {
+                    errorMessage.text("Please enter at least one field");
                     error.show();
                 }
                 else {
@@ -37,19 +34,15 @@
                         url: event.target.action,
                         method: event.target.method,
                         data: JSON.stringify({
-                            firstName: firstName,
-                            lastName: lastName,
-                            email: email,
+                            name: name,
+                            companyName: companyName,
                             phone: phone
                         }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function(data) {
-                            $("#firstName").val("");
-                            $("#lastName").val("");
-                            $("#email").val("");
-                            $("#phone").val("");
-                            $("#messageMessage").text("Record updated!");
+                            $("#messageMessage").text(data);
+                            //$("#messageMessage").text("Record Searched!");
                             $("#message").show();
                         },
                         error: function(err) {
@@ -75,17 +68,17 @@
     <div class="container">
         <form id="searchForm" action="/search" method="post" style="width: auto;">
             <div class="panel panel-default">
-                <div class="panel-heading form-row">
-                   <div class="col-md-4 mb-3">
+                <div class="panel-heading" style="display:inline-block; width:100%;">
+                   <div class="col-md-3">
                           <input type="text" class="form-control" id="name" placeholder="Full Name">
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3">
                           <input type="text" class="form-control" id="companyName" placeholder="Company">
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3">
                           <input type="tel" class="form-control" id="phone" placeholder="Mobile" required>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3">
                           <button class="btn btn-outline-success" type="submit">Search</button>
                         </div>
                 </div>
@@ -110,6 +103,17 @@
                         </tr>
                       </tbody>
                     </table>
+                </div>
+                <div class="panel-footer">
+                    <div id="message" class="alert alert-info" role="alert" style="display: none;">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        <span id="messageMessage"></span>
+                    </div>
+                    <div id="error" class="alert alert-danger" role="alert" style="display: none;">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        <span class="sr-only">Error:</span>
+                        <span id="errorMessage"></span>
+                    </div>
                 </div>
             </div>
         </form>
