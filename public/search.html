@@ -76,17 +76,19 @@
         <form id="searchForm" action="/search" method="post" style="width: auto;">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <div class="col">
-                      <input type="text" class="form-control mr-sm-2" id="name" placeholder="Full Name">
-                    </div>
-                    <div class="col">
-                      <input type="text" class="form-control mr-sm-2" id="companyName" placeholder="Company">
-                    </div>
-                    <div class="col">
-                      <input type="tel" class="form-control mr-sm-2" id="phone" placeholder="Mobile" required>
-                    </div>
-                    <div class="col">
-                      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    <div class="form-row">
+                        <div class="col">
+                          <input type="text" class="form-control mr-sm-2" id="name" placeholder="Full Name">
+                        </div>
+                        <div class="col">
+                          <input type="text" class="form-control mr-sm-2" id="companyName" placeholder="Company">
+                        </div>
+                        <div class="col">
+                          <input type="tel" class="form-control mr-sm-2" id="phone" placeholder="Mobile" required>
+                        </div>
+                        <div class="col">
+                          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                        </div>
                     </div>
                 </div>
                 <div class="panel-body">
@@ -94,9 +96,10 @@
                       <thead>
                         <tr>
                           <th scope="col">#</th>
-                          <th scope="col">First</th>
-                          <th scope="col">Last</th>
-                          <th scope="col">Handle</th>
+                          <th scope="col">Full Name</th>
+                          <th scope="col">Comapny</th>
+                          <th scope="col">Phone</th>
+                          <th scope="col">Temperature</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -105,18 +108,6 @@
                           <td>Mark</td>
                           <td>Otto</td>
                           <td>@mdo</td>
-                        </tr>
-                        <tr>
-                          <th scope="row">2</th>
-                          <td>Jacob</td>
-                          <td>Thornton</td>
-                          <td>@fat</td>
-                        </tr>
-                        <tr>
-                          <th scope="row">3</th>
-                          <td>Larry</td>
-                          <td>the Bird</td>
-                          <td>@twitter</td>
                         </tr>
                       </tbody>
                     </table>
