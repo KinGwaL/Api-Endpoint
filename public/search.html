@@ -44,7 +44,7 @@
                             var rows = data.rows;
                             $("#contentTable tbody tr").remove();
                             for(var i=0; i< rows.length; i++) {
-                                var row = document.getElementById("contentTable").insertRow(-1);
+                                var row = document.getElementById("contentTableTbody").insertRow(0);
                                 var rowData = rows[i];
                                 var cell1 = row.insertCell(0);
                                 var cell2 = row.insertCell(1);
@@ -110,7 +110,7 @@
                           <th scope="col">Temperature</th>
                         </tr>
                       </thead>
-                      <tbody>
+                      <tbody id="contentTableTbody">
                       </tbody>
                     </table>
                 </div>
