@@ -44,7 +44,7 @@
                             var rows = data.rows;
                             $("#contentTable tbody tr").remove();
                             for(var i=0; i< rows.length; i++) {
-                                var row = $("#contentTable tbody").insertRow(0);
+                                var row = document.getElementById("contentTable").insertRow(1);
                                 var rowData = rows[i];
                                 var cell1 = row.insertCell(0);
                                 var cell2 = row.insertCell(1);
