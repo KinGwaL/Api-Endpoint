@@ -39,8 +39,10 @@
                 var companyName = $("#companyName").val();
                 var temperature = $("#temperature").val();
                 var phone = $("#phone").val();
-                  
-                if (name.length == 0 || companyName.length == 0 || temperature.length == 0 || phone.length == 0 || signaturePad.isEmpty()) {
+                var agreement = document.getElementById("agreement");
+                
+                
+                if (name.length == 0 || companyName.length == 0 || temperature.length == 0 || phone.length == 0 || agreement.checked == false || signaturePad.isEmpty()) {
                     errorMessage.text("All of the fields are required.");
                     error.show();
                 }
@@ -64,6 +66,7 @@
                             $("#temperature").val("");
                             $("#phone").val("");
                             signaturePad.clear();
+                            $( "#agreement" ).prop( "checked", false );
                             $("#messageMessage").text("Record Inserted!");
                             $("#message").show();
                         },
@@ -109,6 +112,11 @@
                     <div class="form-group">
                         <label for="phone">Phone</label>
                         <input type="tel" class="form-control" id="phone" placeholder="52345678" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="checkbox" class="custom-control-input" id="agreement" required>
+                        <label class="custom-control-label" for="agreement">Agree to terms and conditions</label>
                     </div>
                     
                     <div class="form-group">
