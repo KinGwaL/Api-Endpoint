@@ -46,7 +46,7 @@ app.post('/search', function(req, res) {
         // watch for any connect issues
         if (err) console.log(err);
         conn.query(
-            'SELECT * FROM salesforce.Medical__c WHERE Name__c = $1 AND Company_Name__c = $2 AND Phone__c = $3',
+            'SELECT * FROM salesforce.Medical__c WHERE Name__c LIKE $1 AND Company_Name__c LIKE $2 AND Phone__c LIKE $3',
             [req.body.name.trim(), req.body.companyName.trim(), req.body.phone.trim()],
             function(err, result) {
                 done();
