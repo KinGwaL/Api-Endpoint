@@ -44,8 +44,7 @@
                             var rows = data.rows;
                             $("#contentTable tbody tr").remove();
                             for(var i=0; i< rows.length; i++) {
-                                var table = document.getElementById("contentTable");
-                                var row = table.insertRow(0);
+                                var row = $("#contentTable tbody").insertRow(0);
                                 var rowData = rows[i];
                                 var cell1 = row.insertCell(0);
                                 var cell2 = row.insertCell(1);
@@ -112,13 +111,6 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <th scope="row">1</th>
-                          <td>Mark</td>
-                          <td>Otto</td>
-                          <td>@mdo</td>
-                          <td>@mdo</td>
-                        </tr>
                       </tbody>
                     </table>
                 </div>
