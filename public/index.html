@@ -10,9 +10,6 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
     <style>
-        body {
-            padding-top: 60px;
-        }
         .navbar {
           background-color: #1798c1;
           color: #FFF;
@@ -87,7 +84,7 @@
     </script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-md navbar-dark">
       <a class="navbar-brand" href="/index.html">Salesforce</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -119,30 +116,64 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
-                        <label for="name">Full Name</label>
+                        <label for="name">Full Name*</label>
                         <input type="text" class="form-control" id="name" placeholder="Chan Tai Man" required>
                     </div>
                     <div class="form-group">
-                        <label for="companyName">Company Name</label>
+                        <label for="companyName">Company Name*</label>
                         <input type="text" class="form-control" id="companyName" placeholder="Salesforce" required>
                     </div>
+
+                      <div class="form-row">
+                        <div class="col-md-4 mb-4">
+                            <label for="name">Full Name*</label>
+                            <input type="text" class="form-control" id="name" placeholder="Chan Tai Man" required>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <label for="companyName">Company*</label>
+                            <input type="text" class="form-control" id="companyName" placeholder="Salesforce" required>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <label for="identityId">Identity ID</label>
+                            <input type="text" class="form-control" id="identityId" placeholder="i.e HKID" >
+                        </div>
+                      </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                          <label for="email">Email</label>
+                          <input type="email" class="form-control" id="email" placeholder="Email">
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label for="phone">Phone*</label>
+                            <input type="tel" class="form-control" id="phone" placeholder="52345678" required>
+                        </div>
+                    </div>
+                    
                     <div class="form-group">
-                        <label for="temperature">Temperature</label>
+                        <label for="temperature">Temperature*</label>
                         <input type="number" step="0.1" class="form-control" id="temperature" placeholder="36.3" required>
                     </div>
+                    
                     <div class="form-group">
-                        <label for="phone">Phone</label>
-                        <input type="tel" class="form-control" id="phone" placeholder="52345678" required>
+                        <label for="countryStay">In the pass 14 days, what countries have you been to or stay (include transit and transfer)? If no, just leave it blank.</label>
+                        <input type="text" class="form-control" id="countryStay" placeholder="Countries">
+                    </div>
+                    
+                     <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="validatedCustomFile" required>
+                        <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
                     </div>
                     
                     <div class="form-group">
-                        <input type="checkbox" class="custom-control-input" id="agreement" required>
-                        <label class="custom-control-label" for="agreement">Agree to terms and conditions</label>
+                        <input type="checkbox" class="form-check-input" id="agreement" required> 
+                        <label class="form-check-label" for="agreement">Agree to terms and conditions</label>
                     </div>
                     
                     <div class="form-group">
+                        <label for="signature-pad">Signature</label>
                         <div class="wrapper center">
-                          <canvas id="signature-pad" class="signature-pad" height=200 width=600></canvas>
+                          <canvas id="signature-pad" class="signature-pad" height=200 width=400></canvas>
                         </div>
                         <div>
                           <button id="clear" class="btn">Clear</button>
