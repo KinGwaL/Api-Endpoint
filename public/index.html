@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Medical Checking Form</title>
     <link rel="stylesheet" href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
     <style>
         .navbar {
           background-color: #1798c1;
@@ -15,72 +14,6 @@
           margin-bottom: 20px;
         }
     </style>
-    <script>
-        $(function() {
-            
-            var signaturePad = new SignaturePad(document.getElementById('signature-pad'), {
-              backgroundColor: 'rgba(245, 245, 245, 1)',
-              penColor: 'rgb(0, 0, 0)'
-            });
-
-            $("#clear").click(function (event) {
-               event.preventDefault();
-               signaturePad.clear();
-            });
-            
-            $("#insertForm").submit(function(event) {
-                event.preventDefault();
-
-                var errorMessage = $("#errorMessage");
-                var error = $("#error");
-                error.hide();
-
-                $("#message").hide();
-
-                var name = $("#name").val();
-                var companyName = $("#companyName").val();
-                var temperature = $("#temperature").val();
-                var phone = $("#phone").val();
-                var agreement = document.getElementById("agreement");
-                
-                if (name.length == 0 || companyName.length == 0 || temperature.length == 0 || phone.length == 0 || agreement.checked == false || signaturePad.isEmpty()) {
-                    errorMessage.text("All of the fields are required.");
-                    error.show();
-                }
-                else {
-                    var dataURL = signaturePad.toDataURL('image/jpeg', 0.2);
-                    $.ajax({
-                        url: event.target.action,
-                        method: event.target.method,
-                        data: JSON.stringify({
-                            name: name,
-                            companyName: companyName,
-                            temperature: temperature,
-                            phone: phone,
-                            dataURL: dataURL
-                        }),
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function(data) {
-                            $("#name").val("");
-                            $("#companyName").val("");
-                            $("#temperature").val("");
-                            $("#phone").val("");
-                            signaturePad.clear();
-                            $( "#agreement" ).prop( "checked", false );
-                            $("#messageMessage").text("Record Inserted!");
-                            $("#message").show();
-                        },
-                        error: function(err) {
-                            errorMessage.text(err.responseJSON.error);
-                            error.show();
-                        }
-                    })
-                }
-            });
-        });
-
-    </script>
 </head>
 <body>
     <nav class="navbar navbar-expand-md navbar-dark">
@@ -193,7 +126,74 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/popper.min.js"></script>
-    <script src="https://getbootstrap.com/docs/4.0/dist/dist/js/bootstrap.min.js"></script>
+    <script src="https://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
     
+    <script>
+        $(function() {
+            
+            var signaturePad = new SignaturePad(document.getElementById('signature-pad'), {
+              backgroundColor: 'rgba(245, 245, 245, 1)',
+              penColor: 'rgb(0, 0, 0)'
+            });
+
+            $("#clear").click(function (event) {
+               event.preventDefault();
+               signaturePad.clear();
+            });
+            
+            $("#insertForm").submit(function(event) {
+                event.preventDefault();
+
+                var errorMessage = $("#errorMessage");
+                var error = $("#error");
+                error.hide();
+
+                $("#message").hide();
+
+                var name = $("#name").val();
+                var companyName = $("#companyName").val();
+                var temperature = $("#temperature").val();
+                var phone = $("#phone").val();
+                var agreement = document.getElementById("agreement");
+                
+                if (name.length == 0 || companyName.length == 0 || temperature.length == 0 || phone.length == 0 || agreement.checked == false || signaturePad.isEmpty()) {
+                    errorMessage.text("All of the fields are required.");
+                    error.show();
+                }
+                else {
+                    var dataURL = signaturePad.toDataURL('image/jpeg', 0.2);
+                    $.ajax({
+                        url: event.target.action,
+                        method: event.target.method,
+                        data: JSON.stringify({
+                            name: name,
+                            companyName: companyName,
+                            temperature: temperature,
+                            phone: phone,
+                            dataURL: dataURL
+                        }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function(data) {
+                            $("#name").val("");
+                            $("#companyName").val("");
+                            $("#temperature").val("");
+                            $("#phone").val("");
+                            signaturePad.clear();
+                            $( "#agreement" ).prop( "checked", false );
+                            $("#messageMessage").text("Record Inserted!");
+                            $("#message").show();
+                        },
+                        error: function(err) {
+                            errorMessage.text(err.responseJSON.error);
+                            error.show();
+                        }
+                    })
+                }
+            });
+        });
+
+    </script>
 </body>
 </html>
