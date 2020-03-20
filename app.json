@@ -1,7 +1,7 @@
 {
-  "name": "Phone Change",
-  "description": "Heroku Connect Sample App - Phone Change",
-  "repository": "https://github.com/jamesward/heroku-connect-phone-change",
+  "name": "Medical Form Recording",
+  "description": "Heroku Connect Sample App - Medical Form Recording",
+  "repository": "https://github.com/KinGwaL/Heroku-medical-insert-form",
   "success_url": "/setup.html",
   "env": {
     "PGSSLMODE": {
