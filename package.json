@@ -1,5 +1,5 @@
 {
-  "name": "Medical Form Recording",
+  "name": "medical-form-recording",
   "version": "0.0.1",
   "description": "Heroku Connect Sample App - Medical Form Recording",
   "main": "server.js",
