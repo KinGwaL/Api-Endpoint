@@ -1,7 +1,7 @@
 {
-  "name": "phone-change",
-  "version": "0.0.0",
-  "description": "Heroku Connect Sample App - Phone Change",
+  "name": "Medical Form Recording",
+  "version": "0.0.1",
+  "description": "Heroku Connect Sample App - Medical Form Recording",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
