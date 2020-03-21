@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Medical Checking Form</title>
+    <title>Medical Record Search</title>
     <link rel="stylesheet" href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css">
     <style>
         .navbar {
@@ -13,12 +12,11 @@
           color: #FFF;
           margin-bottom: 20px;
         }
-        
-        .agreement {
-          margin-top: 30px;
+        .table, th {
+            white-space: nowrap;
         }
-        
         .footer {
+          margin-top: 20px;
           margin-bottom: 20px;
         }
     </style>
@@ -47,75 +45,22 @@
         </ul>
       </div>
     </nav>
-
+    
     <div class="container">
-        <form id="insertForm" action="/insert" method="post" style="width: auto">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Insert your medical record</h3>
+                    <h3 class="panel-title">Check In Status</h3>
                 </div>
+
                 <div class="panel-body">
                     
-                      <div class="form-row">
-                        <div class="col-md-4 mb-4">
-                            <label for="name">Full Name*</label>
-                            <input type="text" class="form-control" id="name" placeholder="Chan Tai Man" required>
-                        </div>
-                        <div class="col-md-4 mb-4">
-                            <label for="companyName">Company*</label>
-                            <input type="text" class="form-control" id="companyName" placeholder="Salesforce" required>
-                        </div>
-                        <div class="col-md-4 mb-4">
-                            <label for="identityId">Identity ID</label>
-                            <input type="text" class="form-control" id="identityId" placeholder="A1234" >
+                    <div class="form-row" style="display: none;">
+                        <div>
+                            <form id="refreshForm" action="/refresh" method="post" style="width: auto;">
+                                <button type="submit" class="btn btn-success">Refresh</button>
+                            </form>
                         </div>
                       </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                          <label for="email">Email</label>
-                          <input type="email" class="form-control" id="email" placeholder="Email">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="phone">Phone*</label>
-                            <input type="tel" class="form-control" id="phone" placeholder="52345678" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="temperature">Temperature*</label>
-                        <input type="number" step="0.1" class="form-control" id="temperature" placeholder="36.3" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="countryStay">In the pass 14 days, what countries have you been to or stay (include transit and transfer)? If no, just leave it blank.</label>
-                        <input type="text" class="form-control" id="countryStay" placeholder="Countries">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="signature-pad">Signature</label>
-                        <div class="wrapper center">
-                          <canvas id="signature-pad" class="signature-pad" height=200 width=400></canvas>
-                        </div>
-<!--                         <div>
-                          <button id="clear" class="btn">Clear</button>
-                        </div> -->
-                    </div>
-                    
-<!--                     <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="validatedCustomFile">
-                        <label class="custom-file-label" for="validatedCustomFile">Additional attachment</label>
-                    </div> -->
-                    
-                    <div class="form-group agreement">
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" id="agreement" required>
-                          <label class="form-check-label" for="agreement">Agree to terms and conditions</label>
-                        </div>
-                    </div>
-                    
-                </div>
-                <div class="panel-footer footer">
                     <div id="message" class="alert alert-info" role="alert" style="display: none;">
                         <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                         <span id="messageMessage"></span>
@@ -125,78 +70,80 @@
                         <span class="sr-only">Error:</span>
                         <span id="errorMessage"></span>
                     </div>
-                    <button type="submit" class="btn btn-primary">Insert Record</button>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="contentTable">
+                          <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Comapny</th>
+                                <th>Phone</th>
+                                <th>Temperature</th>
+                                <th>Check In</th>
+                                <th>Check Out</th>
+                            </tr>
+                          </thead>
+                          <tbody id="contentTableTbody">
+                          </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="panel-footer">
                 </div>
             </div>
-        </form>
     </div>
     
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/popper.min.js"></script>
     <script src="https://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
-    
     <script>
+        function refreshDashboard() {
+          document.getElementById("refreshForm").submit();
+        }
+        
         $(function() {
             
-            var signaturePad = new SignaturePad(document.getElementById('signature-pad'), {
-              backgroundColor: 'rgba(245, 245, 245, 1)',
-              penColor: 'rgb(0, 0, 0)'
-            });
-
-            $("#clear").click(function (event) {
-               event.preventDefault();
-               signaturePad.clear();
-            });
-            
-            $("#insertForm").submit(function(event) {
+            $("#refreshForm").submit(function(event) {
                 event.preventDefault();
 
                 var errorMessage = $("#errorMessage");
                 var error = $("#error");
-                error.hide();
-
                 $("#message").hide();
-
-                var name = $("#name").val();
-                var companyName = $("#companyName").val();
-                var temperature = $("#temperature").val();
-                var phone = $("#phone").val();
-                var email = $("#email").val();
-                var countryStay = $("#countryStay").val();
-                var identityId = $("#identityId").val();
-                var agreement = document.getElementById("agreement");
+                error.hide();
                 
-                if (name.length == 0 || companyName.length == 0 || temperature.length == 0 || phone.length == 0 || agreement.checked == false || signaturePad.isEmpty()) {
-                    errorMessage.text("All of the fields are required.");
-                    error.show();
-                }
-                else {
-                    var dataURL = signaturePad.toDataURL('image/jpeg', 0.2);
-                    $.ajax({
+                var time = Date.now();
+                
+                $.ajax({
                         url: event.target.action,
                         method: event.target.method,
                         data: JSON.stringify({
-                            name: name,
-                            companyName: companyName,
-                            temperature: temperature,
-                            phone: phone,
-                            dataURL: dataURL
+                            time: time
                         }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function(data) {
-                            $("#name").val("");
-                            $("#companyName").val("");
-                            $("#temperature").val("");
-                            $("#phone").val("");
-                            $("#countryStay").val("");
-                            $("#email").val("");
-                            $("#identityId").val("");
-                            signaturePad.clear();
-                            $( "#agreement" ).prop( "checked", false );
-                            $("#messageMessage").text("Record Inserted!");
+                            var rows = data.rows;
+                            $("#contentTable tbody tr").remove();
+                            for(var i=0; i< rows.length; i++) {
+                                var row = document.getElementById("contentTableTbody").insertRow(0);
+                                var rowData = rows[i];
+                                var cell1 = row.insertCell(0);
+                                var cell2 = row.insertCell(1);
+                                var cell3 = row.insertCell(2);
+                                var cell4 = row.insertCell(3);
+                                var cell5 = row.insertCell(4);
+                                var cell6 = row.insertCell(5);
+                                
+                                cell1.innerHTML = rowData.name__c;
+                                cell2.innerHTML = rowData.company_name__c;
+                                cell3.innerHTML = rowData.phone__c;
+                                cell4.innerHTML = rowData.temperature__c;
+                                cell5.innerHTML = rowData.createdDate;
+                                cell6.innerHTML = "<form id=\"checkOut\" action=\"/checkOut\" method=\"post\"><button type=\"submit\" class=\"btn btn-success\">Check Out</button></form>";
+                            }
+                            
+                            $("#messageMessage").text("Record Searched!" + Date.now());
                             $("#message").show();
                         },
                         error: function(err) {
@@ -204,10 +151,11 @@
                             error.show();
                         }
                     })
-                }
             });
+            
+            var myVar = setInterval(refreshDashboard, 10000);
+            document.getElementById("refreshForm").submit();
         });
-
     </script>
 </body>
 </html>
