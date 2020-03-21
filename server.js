@@ -63,6 +63,24 @@ app.post('/search', function(req, res) {
     });
 });
 
+app.post('/refresh', function(req, res) {
+    pg.connect(process.env.DATABASE_URL, function (err, conn, done) {
+        if (err) console.log(err);
+        conn.query(
+            'SELECT * FROM salesforce.Medical__c WHERE Check_Out__c = \'\'',
+            function(err, result) {
+                done();
+                if (err) {
+                    res.status(400).json({error: err.message});
+                }
+                else {
+                    res.json(result);
+                }
+            }
+        );
+    });
+});
+
 app.post('/insert', function(req, res) {
     pg.connect(process.env.DATABASE_URL, function (err, conn, done) {
         // watch for any connect issues
