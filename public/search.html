@@ -155,10 +155,16 @@
                                 cell2.innerHTML = rowData.name__c;
                                 cell3.innerHTML = rowData.company_name__c;
                                 cell4.innerHTML = rowData.phone__c;
-                                cell5.innerHTML = rowData.Email__c;
+                                if (rowData.Email__c != undefined) {
+                                    cell5.innerHTML = rowData.Email__c;
+                                }
                                 cell6.innerHTML = rowData.temperature__c;
-                                cell7.innerHTML = rowData.Accessed_Countries__c;
-                                cell8.innerHTML = rowData.Notes__c;
+                                if (rowData.Accessed_Countries__c != undefined) {
+                                    cell7.innerHTML = rowData.Accessed_Countries__c;
+                                }
+                                if (rowData.Notes__c != undefined) {
+                                    cell8.innerHTML = rowData.Notes__c;
+                                }
                             }
                             
                             $("#messageMessage").text("Record Searched!");
