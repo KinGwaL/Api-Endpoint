@@ -57,7 +57,7 @@
                     <div class="form-row" style="display: none;">
                         <div>
                             <form id="refreshForm" action="/refresh" method="post" style="width: auto;">
-                                <button type="submit" class="btn btn-success">Refresh</button>
+                                <button id="refreshButton" type="submit" class="btn btn-success">Refresh</button>
                             </form>
                         </div>
                       </div>
@@ -154,7 +154,7 @@
             });
             
             var myVar = setInterval(refreshDashboard, 10000);
-            document.getElementById("refreshForm").submit();
+            document.getElementById("refreshButton").click();
         });
     </script>
 </body>
