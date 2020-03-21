@@ -80,8 +80,8 @@
                 success: function (jsonData) {
                     var data = new google.visualization.DataTable();
                     data.addColumn('number', 'Temperature');
-                    for (var i = 0; i < jsonData.length; i++) {
-                        data.addRow([jsonData[i].createddate, jsonData[i].temperature__c]);
+                    for (var i = 0; i < jsonData.values.length; i++) {
+                        data.addRow([jsonData.values[i].createddate, jsonData.values[i].temperature__c]);
                     }
                     var options = {
                         hAxis: { title: 'Time' },
