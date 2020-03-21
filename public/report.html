@@ -83,15 +83,16 @@
                 dataType: "json",
                 success: function (jsonData) {
                     var data = new google.visualization.DataTable();
-                    //data.addColumn('date', 'Time');
-                    data.addColumn('number', 'Time');
+                    data.addColumn('date', 'Time');
+                    //data.addColumn('number', 'Time');
                     data.addColumn('number', 'Temperature');
                     data.addColumn({type: 'string', name: 'Extra', role:'tooltip'});
                     
                     for (var i = 0; i < jsonData.values.length; i++) {
                         var row = jsonData.values[i];
-                        //var createdDate = new Date(row[0]);
-                        var createdDate = 1;
+                        //var createdDate = new Date(row[0].replace(' ', 'T'));
+                        var createdDate = new Date(row[0].replace(/-/g, '/'));
+                        //var createdDate = i;
                         var temperature = row[1];      
                         var description = row.join("\n");
                         data.addRow([createdDate, temperature, description]);
