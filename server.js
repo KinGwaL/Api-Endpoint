@@ -48,7 +48,7 @@ app.post('/search', function(req, res) {
 //  'SELECT * FROM salesforce.Medical__c WHERE (Name__c = $1 OR $1 IS NULL) AND (Company_Name__c = $2 OR $2 IS NULL) AND (Phone__c = $3 OR $3 IS NULL)',
         if (err) console.log(err);
         conn.query(
-            'SELECT * FROM salesforce.Medical__c WHERE ($1 = \'\' OR Name__c ~ $1) AND ($2 = \'\' OR Company_Name__c LIKE $2) AND ($3 = \'\' OR Phone__c LIKE $3)',
+            'SELECT * FROM salesforce.Medical__c WHERE ($1 = \'\' OR Name__c ~ $1) AND ($2 = \'\' OR Company_Name__c ~ $2) AND ($3 = \'\' OR Phone__c ~ $3)',
             [req.body.name.trim(), req.body.companyName.trim(), req.body.phone.trim()],
             function(err, result) {
                 done();
