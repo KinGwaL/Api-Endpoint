@@ -173,7 +173,8 @@
                     error.show();
                 }
                 else {
-                    var dataURL = signaturePad.toDataURL('image/jpeg', 0.2);
+                    var signature = signaturePad.toDataURL('image/jpeg', 0.2);
+                    
                     $.ajax({
                         url: event.target.action,
                         method: event.target.method,
@@ -182,7 +183,10 @@
                             companyName: companyName,
                             temperature: temperature,
                             phone: phone,
-                            dataURL: dataURL
+                            email: email,
+                            countryStay: countryStay,
+                            identityId: identityId,
+                            signature: signature
                         }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
