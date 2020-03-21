@@ -67,7 +67,7 @@ app.post('/refresh', function(req, res) {
     pg.connect(process.env.DATABASE_URL, function (err, conn, done) {
         if (err) console.log(err);
         conn.query(
-            'SELECT * FROM salesforce.Medical__c WHERE (Check_Out__c = \'\')',
+            'SELECT * FROM salesforce.Medical__c WHERE (Check_Out__c IS NULL)',
             function(err, result) {
                 done();
                 if (err) {
