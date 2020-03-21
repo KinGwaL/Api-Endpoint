@@ -105,7 +105,7 @@
 
                 var errorMessage = $("#errorMessage");
                 var error = $("#error");
-                $("#message").hide();
+                //$("#message").hide();
                 error.hide();
                 
                 var time = Date.now();
@@ -139,7 +139,8 @@
                                 cell6.innerHTML = "<form id=\"checkOut\" action=\"/checkOut\" method=\"post\"><button type=\"submit\" class=\"btn btn-success\">Check Out</button></form>";
                             }
                             
-                            $("#messageMessage").text("Record Searched!" + Date.now());
+                            var dateString = new Date().toJSON().slice(0,10).split('-').reverse().join('/') 
+                            $("#messageMessage").text("Record Refreshed! " + dateString);
                             $("#message").show();
                         },
                         error: function(err) {
