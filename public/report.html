@@ -50,11 +50,7 @@
 
     <div class="container">
       <div class="row">
-        <div class="col-sm-6">
-            <div id="chart_div">
-            </div>
-        </div>
-        <div class="col-sm-6"> 
+        <div id="chart_div">
         </div>
       </div>
       <div class="row">
@@ -78,35 +74,24 @@
         });
         
         function drawCrosshairs() {
-      var data = new google.visualization.DataTable();
-      data.addColumn('number', 'X');
-      data.addColumn('number', 'Dogs');
-      data.addColumn('number', 'Cats');
-
-      data.addRows([
-        [0, 0, 0],    [1, 10, 5],   [2, 23, 15],  [3, 17, 9],   [4, 18, 10],  [5, 9, 5],
-        [6, 11, 3],   [7, 27, 19],  [8, 33, 25],  [9, 40, 32]
-      ]);
-
-      var options = {
-        hAxis: {
-          title: 'Time'
-        },
-        vAxis: {
-          title: 'Popularity'
-        },
-        colors: ['#a52714', '#097138'],
-        crosshair: {
-          color: '#000',
-          trigger: 'selection'
+            $.ajax({
+                url: "https://data.heroku.com/dataclips/binebpunmxqumimjxhgunszljgxe.json?access-token=8f105bd6-9669-4340-ad88-20c6e5da3444",
+                dataType: "json",
+                success: function (jsonData) {
+                    var data = new google.visualization.DataTable();
+                    data.addColumn('number', 'Temperature');
+                    for (var i = 0; i < jsonData.length; i++) {
+                        data.addRow([jsonData[i].createddate, jsonData[i].temperature__c]);
+                    }
+                    var options = {
+                        hAxis: { title: 'Time' },
+                        vAxis: { title: 'Temperature' }
+                    };
+                    var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+                    chart.draw(data, options);
+                }
+            });
         }
-      };
-
-      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-      chart.draw(data, options);
-//      chart.setSelection([{row: 5, column: 1}]);
-
-    }
     </script>
 </body>
 </html>
