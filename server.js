@@ -48,7 +48,7 @@ app.post('/search', function(req, res) {
 //  'SELECT * FROM salesforce.Medical__c WHERE (Name__c = $1 OR $1 IS NULL) AND (Company_Name__c = $2 OR $2 IS NULL) AND (Phone__c = $3 OR $3 IS NULL)',
         if (err) console.log(err);
         conn.query(
-            'SELECT * FROM salesforce.Medical__c WHERE (Name__c = $1 OR $1 = \'\') AND (Company_Name__c = $2 OR $2 = \'\') AND (Phone__c = $3 OR $3 = \'\')',
+            'SELECT * FROM salesforce.Medical__c WHERE ($1 = \'\' OR CONTAINS(Name__c,$1)) AND ($2 = \'\' OR CONTAINS(Company_Name__c, $2)) AND ($3 = \'\' OR CONTAINS(Phone__c, $3))',
             [req.body.name.trim(), req.body.companyName.trim(), req.body.phone.trim()],
             function(err, result) {
                 done();
@@ -68,8 +68,8 @@ app.post('/insert', function(req, res) {
         // watch for any connect issues
         if (err) console.log(err);
         conn.query(
-            'INSERT INTO salesforce.Medical__c (Name__c, Phone__c, Temperature__c, Company_Name__c, Signature__c, email__c, Identity_Id__c, Accessed_Countries__c) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
-            [req.body.name.trim(), req.body.phone.trim(), req.body.temperature.trim(), req.body.companyName.trim(), req.body.signature.trim(), req.body.email.trim(), req.body.identityId.trim(), req.body.countryStay.trim()],
+            'INSERT INTO salesforce.Medical__c (Name__c, Phone__c, Temperature__c, Company_Name__c, Signature__c, email__c, Identity_Id__c, Accessed_Countries__c, Notes__c) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
+            [req.body.name.trim(), req.body.phone.trim(), req.body.temperature.trim(), req.body.companyName.trim(), req.body.signature.trim(), req.body.email.trim(), req.body.identityId.trim(), req.body.countryStay.trim(), req.body.notes.trim()],
             function(err, result) {
                 done();
                 if (err) {
