@@ -145,14 +145,18 @@
                                 var cell3 = row.insertCell(2);
                                 var cell4 = row.insertCell(3);
                                 var cell5 = row.insertCell(4);
-                                var cell6 = row.insertCell(6);
+                                var cell6 = row.insertCell(5);
+                                var cell7 = row.insertCell(6);
+                                var cell8 = row.insertCell(7);
                                 
                                 cell1.innerHTML = rowData.name;
                                 cell2.innerHTML = rowData.name__c;
                                 cell3.innerHTML = rowData.company_name__c;
                                 cell4.innerHTML = rowData.phone__c;
-                                cell5.innerHTML = rowData.temperature__c;
-                                cell6.innerHTML = rowData.Accessed_Countries__c;
+                                cell5.innerHTML = rowData.Email__c;
+                                cell6.innerHTML = rowData.temperature__c;
+                                cell7.innerHTML = rowData.Accessed_Countries__c;
+                                cell8.innerHTML = rowData.Notes__c;
                             }
                             
                             $("#messageMessage").text("Record Searched!");
