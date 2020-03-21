@@ -79,6 +79,7 @@
                 dataType: "json",
                 success: function (jsonData) {
                     var data = new google.visualization.DataTable();
+                    data.addColumn('number', 'Time');
                     data.addColumn('number', 'Temperature');
                     for (var i = 0; i < jsonData.values.length; i++) {
                         var createdDate = jsonData.values[i][0];
