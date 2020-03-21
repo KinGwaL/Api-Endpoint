@@ -81,7 +81,7 @@
                     var data = new google.visualization.DataTable();
                     data.addColumn('number', 'Temperature');
                     for (var i = 0; i < jsonData.values.length; i++) {
-                        data.addRow([jsonData.values[i][1], jsonData.values[i][0]);
+                        data.addRow([jsonData.values[i][0], jsonData.values[i][1]);
                     }
                     var options = {
                         hAxis: { title: 'Time' },
