@@ -85,12 +85,18 @@
                     var data = new google.visualization.DataTable();
                     data.addColumn('date', 'Time');
                     data.addColumn('number', 'Temperature');
+                    data.addColumn({type: 'string', name: 'Extra', role:'tooltip'});
+                    
                     for (var i = 0; i < jsonData.values.length; i++) {
-                        var createdDate = new Date(jsonData.values[i][0]);
-                        var temperature = jsonData.values[i][1];                   
-                        data.addRow([createdDate, temperature]);
+                        var row = jsonData.values[i];
+                        var createdDate = new Date(row[0]);
+                        var temperature = row[1];      
+                        var description = row.join("\n");
+                        data.addRow([createdDate, temperature, description]);
                     }
                     var options = {
+                        pointSize: 10,
+                        dataOpacity: 0.3,
                         hAxis: { title: 'Time' },
                         vAxis: { title: 'Temperature' }
                     };
