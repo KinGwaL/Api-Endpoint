@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Medical Form Search</title>
     <link rel="stylesheet" href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css">
-    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <style>
         body {
             padding-top: 60px;
@@ -41,6 +40,10 @@
     <div class="container">
         <form id="searchForm" action="/search" method="post" style="width: auto;">
             <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Medical record search</h3>
+                </div>
+<!--                 
                 <div class="panel-heading" style="display:inline-block; width:100%;">
                    <div class="col-md-3">
                           <input type="text" class="form-control" id="name" placeholder="Full Name">
@@ -54,8 +57,24 @@
                         <div class="col-md-3">
                           <button class="btn btn-outline-success" type="submit">Search</button>
                         </div>
-                </div>
+                </div> -->
                 <div class="panel-body">
+                    
+                    <div class="form-row">
+                        <div class="col-md-3 mb-3">
+                            <input type="text" class="form-control" id="name" placeholder="Full Name">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <input type="text" class="form-control" id="companyName" placeholder="Company">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <input type="tel" class="form-control" id="phone" placeholder="Mobile">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <button type="submit" class="btn btn-success">Search</button>
+                        </div>
+                      </div>
+                    
                     <table class="table table-striped" id="contentTable">
                       <thead>
                         <tr>
