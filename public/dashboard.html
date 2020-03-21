@@ -98,10 +98,6 @@
     <script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/popper.min.js"></script>
     <script src="https://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js"></script>
     <script>
-        function refreshDashboard() {
-          document.getElementById("refreshForm").submit();
-        }
-        
         $(function() {
             
             $("#refreshForm").submit(function(event) {
@@ -156,6 +152,9 @@
             var myVar = setInterval(refreshDashboard, 10000);
             document.getElementById("refreshButton").click();
         });
+        function refreshDashboard() {
+          document.getElementById("refreshButton").click();
+        }
     </script>
 </body>
 </html>
