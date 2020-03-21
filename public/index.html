@@ -163,6 +163,9 @@
                 var companyName = $("#companyName").val();
                 var temperature = $("#temperature").val();
                 var phone = $("#phone").val();
+                var email = $("#email").val();
+                var countryStay = $("#countryStay").val();
+                var identityId = $("#identityId").val();
                 var agreement = document.getElementById("agreement");
                 
                 if (name.length == 0 || companyName.length == 0 || temperature.length == 0 || phone.length == 0 || agreement.checked == false || signaturePad.isEmpty()) {
@@ -188,6 +191,9 @@
                             $("#companyName").val("");
                             $("#temperature").val("");
                             $("#phone").val("");
+                            $("#countryStay").val("");
+                            $("#email").val("");
+                            $("#identityId").val("");
                             signaturePad.clear();
                             $( "#agreement" ).prop( "checked", false );
                             $("#messageMessage").text("Record Inserted!");
