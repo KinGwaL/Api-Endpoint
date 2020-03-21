@@ -135,7 +135,7 @@
                                 cell2.innerHTML = rowData.company_name__c;
                                 cell3.innerHTML = rowData.phone__c;
                                 cell4.innerHTML = rowData.temperature__c + "°C";
-                                cell5.innerHTML = rowData.CreatedDate;
+                                cell5.innerHTML = rowData.createddate.replace('T',' ');
                                 cell6.innerHTML = "<form id=\"checkOut\" action=\"/checkOut\" method=\"post\"><button type=\"submit\" class=\"btn btn-success\">Check Out</button></form>";
                             }
                             
