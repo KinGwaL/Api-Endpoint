@@ -135,7 +135,7 @@
                                 cell2.innerHTML = rowData.company_name__c;
                                 cell3.innerHTML = rowData.phone__c;
                                 cell4.innerHTML = rowData.temperature__c + "°C";
-                                cell5.innerHTML = rowData.createddate.replace('T',' ');
+                                cell5.innerHTML = rowData.createddate.replace('T',' ').replace('.000Z','');
                                 cell6.innerHTML = "<form id=\"checkOut\" action=\"/checkOut\" method=\"post\"><button type=\"submit\" class=\"btn btn-success\">Check Out</button></form>";
                             }
                             
@@ -151,7 +151,7 @@
             });
             
             var myVar = setInterval(refreshDashboard, 10000);
-            //document.getElementById("refreshButton").click();
+            document.getElementById("refreshButton").click();
         });
         function refreshDashboard() {
           document.getElementById("refreshButton").click();
