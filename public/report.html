@@ -70,10 +70,10 @@
     <script>
         $(function() {
             google.charts.load('current', {packages: ['corechart', 'line']});
-            google.charts.setOnLoadCallback(drawCrosshairs);
+            google.charts.setOnLoadCallback(temperatureChart);
         });
         
-        function drawCrosshairs() {
+        function temperatureChart() {
             $.ajax({
                 url: "https://data.heroku.com/dataclips/binebpunmxqumimjxhgunszljgxe.json?access-token=8f105bd6-9669-4340-ad88-20c6e5da3444",
                 dataType: "json",
@@ -81,8 +81,8 @@
                     var data = new google.visualization.DataTable();
                     data.addColumn('number', 'Temperature');
                     for (var i = 0; i < jsonData.values.length; i++) {
-                        var createdDate = [jsonData.values[i][0];
-                        var temperature = [jsonData.values[i][1];                   
+                        var createdDate = jsonData.values[i][0];
+                        var temperature = jsonData.values[i][1];                   
                         data.addRow([createdDate, temperature]);
                     }
                     var options = {
@@ -94,6 +94,10 @@
                 }
             });
         }
+        $(window).resize(function(){
+          //drawChart1();
+          temperatureChart();
+        });
     </script>
 </body>
 </html>
