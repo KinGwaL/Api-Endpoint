@@ -29,6 +29,30 @@ app.post('/insert', function(req, res) {
     });
 });
 
+app.get('/all-servey', function(req, res) {
+    
+    pg.connect(process.env.DATABASE_URL, function (err, conn, done) {
+        if (err) console.log(err);
+        conn.query(
+            'SELECT * FROM salesforce.Ruby_Survey__c ORDER BY CreatedDate DESC',
+            function(err, result) {
+                done();
+                if (err) {
+                    res.status(400).json({error: err.message});
+                }
+                else {
+                    //res.json(result);
+                    res.send(res.json(result));
+                }
+            }
+        );
+    });
+    
+    
+}
+        
+
+
 app.post('/refresh', function(req, res) {
     pg.connect(process.env.DATABASE_URL, function (err, conn, done) {
         if (err) console.log(err);
