@@ -1,7 +1,7 @@
 {
-  "name": "Medical Form Recording",
-  "description": "Heroku Connect Sample App - Medical Form Recording",
-  "repository": "https://github.com/KinGwaL/Heroku-medical-insert-form",
+  "name": "Ruby Survey",
+  "description": "Heroku Connect Example - Survey",
+  "repository": "https://github.com/KinGwaL/Heroku-Ruby-Survey",
   "success_url": "/setup.html",
   "env": {
     "PGSSLMODE": {
