@@ -2,7 +2,7 @@
   "name": "Ruby Survey",
   "description": "Heroku Connect Example - Survey",
   "repository": "https://github.com/KinGwaL/Heroku-Ruby-Survey",
-  "success_url": "/setup.html",
+  "success_url": "/index.html",
   "env": {
     "PGSSLMODE": {
       "description": "Require SSL for Postgres",
