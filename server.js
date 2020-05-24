@@ -48,8 +48,7 @@ app.get('/all-servey', function(req, res) {
         );
     });
     
-    
-}
+});
         
 
 
