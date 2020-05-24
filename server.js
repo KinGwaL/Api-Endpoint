@@ -14,7 +14,7 @@ app.post('/insert', function(req, res) {
         // watch for any connect issues
         if (err) console.log(err);
         conn.query(
-            'INSERT INTO salesforce.Ruby_Survey__c (Full_Name__c, Position__c, Rating__c, Learnt1__c, Learnt2__c, Learnt3__c, suggest1__c, suggest2__c, suggest3__c) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
+            'INSERT INTO salesforce.Ruby_Survey__c (Full_Name__c, Position__c, Rating__c, Learnt_1__c, Learnt_2__c, Learnt_3__c, Suggestion_1__c, Suggestion_2__c, Suggestion_3__c) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
             [req.body.name.trim(), req.body.position.trim(), req.body.rating.trim(), req.body.learnt1.trim(), req.body.learnt2.trim(), req.body.learnt3.trim(), req.body.suggest1.trim(), req.body.suggest2.trim(), req.body.suggest3.trim()],
             function(err, result) {
                 done();
