@@ -59,13 +59,17 @@
                 <div class="panel-body">
                     
                       <div class="form-row">
-                        <div class="col-md-6 mb-6">
+                        <div class="col-md-4 mb-4">
                             <label for="name">Full Name <span class="required">*</span></label>
                             <input type="text" class="form-control" id="name" placeholder="Chan Tai Man" required>
                         </div>
-                        <div class="col-md-6 mb-6">
+                        <div class="col-md-4 mb-4">
                             <label for="position">Position</label>
-                            <input type="text" class="form-control" id="identityId" placeholder="A1234" >
+                            <input type="text" class="form-control" id="identityId" placeholder="SA" >
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <label for="rating">Rating</label>
+                            <input type="text" class="form-control" id="rating" placeholder="1-5" >
                         </div>
                       </div>
                     
@@ -136,6 +140,7 @@
 
                 var name = $("#name").val();
                 var position = $("#position").val();
+                var rating = $("#rating").val();
                 var learnt1 = $("#learnt1").val();
                 var learnt2 = $("#learnt2").val();
                 var learnt3 = $("#learnt3").val();
@@ -155,6 +160,7 @@
                         data: JSON.stringify({
                             name: name,
                             position: position,
+                            rating: rating,
                             learnt1: learnt1,
                             learnt2: learnt2,
                             learnt3: learnt3,
@@ -167,6 +173,7 @@
                         success: function(data) {
                             $("#name").val("");
                             $("#position").val("");
+                            $("#rating").val("");
                             $("#learnt1").val("");
                             $("#learnt2").val("");
                             $("#learnt3").val("");
