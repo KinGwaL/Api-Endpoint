@@ -1,7 +1,7 @@
 {
-  "name": "medical-form-recording",
+  "name": "heroku-ruby-survey",
   "version": "0.0.1",
-  "description": "Heroku Connect Sample App - Medical Form Recording",
+  "description": "Heroku Connect Example - Survey",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
