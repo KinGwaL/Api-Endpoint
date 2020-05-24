@@ -5,11 +5,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Medical Record Form</title>
+    <title>Heroku Survey</title>
     <link rel="stylesheet" href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css">
     <style>
         .navbar {
-          background-color: #009edb;
+          background-color: #C9C3E6;
           color: #FFF;
           margin-bottom: 20px;
         }
@@ -27,13 +27,13 @@
         }
         
         #notes {
-          height: 100px;
+          height: 30px;
         }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-md navbar-dark">
-      <a class="navbar-brand" href="/index.html">Salesforce</a>
+      <a class="navbar-brand" href="/index.html">Heroku</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navBar" aria-controls="navBar" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -44,13 +44,7 @@
                 <a class="nav-link" href="/index.html">Form<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/dashboard.html">Dashboard</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/search.html">Search</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/report.html">Report</a>
+                <a class="nav-link" href="https://www.heroku.com/about" target="_blank">About Heroku</a>
             </li>
         </ul>
       </div>
@@ -60,73 +54,68 @@
         <form id="insertForm" action="/insert" method="post" style="width: auto">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Medical Record</h3>
+                    <h3 class="panel-title">Survey</h3>
                 </div>
                 <div class="panel-body">
                     
                       <div class="form-row">
-                        <div class="col-md-4 mb-4">
+                        <div class="col-md-6 mb-6">
                             <label for="name">Full Name <span class="required">*</span></label>
                             <input type="text" class="form-control" id="name" placeholder="Chan Tai Man" required>
                         </div>
-                        <div class="col-md-4 mb-4">
-                            <label for="companyName">Company <span class="required">*</span></label>
-                            <input type="text" class="form-control" id="companyName" placeholder="Salesforce" required>
-                        </div>
-                        <div class="col-md-4 mb-4">
-                            <label for="identityId">Identity ID</label>
+                        <div class="col-md-6 mb-6">
+                            <label for="position">Position</label>
                             <input type="text" class="form-control" id="identityId" placeholder="A1234" >
                         </div>
                       </div>
                     
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="phone">Phone <span class="required">*</span></label>
-                            <input type="tel" class="form-control" id="phone" placeholder="52345678" required>
-                        </div>
-                        <div class="form-group col-md-6">
-                          <label for="email">Email</label>
-                          <input type="email" class="form-control" id="email" placeholder="Email">
-                        </div>
+                    <div class="form-group">
+                        <label for="learnt1">Learnt 1</label>
+                        <input type="text" class="form-control" id="learnt1" placeholder="">
                     </div>
                     
                     <div class="form-group">
-                        <label for="temperature">Temperature <span class="required">*</span></label>
-                        <input type="number" step="0.1" class="form-control" id="temperature" placeholder="36.3" required>
+                        <label for="learnt2">Learnt 2</label>
+                        <input type="text" class="form-control" id="learnt2" placeholder="">
                     </div>
                     
                     <div class="form-group">
-                        <label for="countryStay">In the pass 14 days, what countries have you been to or stay (include transit and transfer)? If no, just leave it blank.</label>
-                        <input type="text" class="form-control" id="countryStay" placeholder="Countries">
+                        <label for="learnt3">Learnt 3</label>
+                        <input type="text" class="form-control" id="learnt3" placeholder="">
                     </div>
                     
                     <div class="form-group">
-                        <label for="notes">Notes</label>
-                        <input type="text" class="form-control" id="notes" placeholder="">
+                        <label for="suggest1">Suggest 1</label>
+                        <input type="text" class="form-control" id="suggest1" placeholder="">
                     </div>
                     
                     <div class="form-group">
-                        <label for="signature-pad">Signature <span class="required">*</span></label>
-                        <div class="wrapper center">
-                          <canvas id="signature-pad" class="signature-pad" height=200 width=400></canvas>
+                        <label for="suggest2">Suggest 2</label>
+                        <input type="text" class="form-control" id="suggest2" placeholder="">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="suggest3">Suggest 3</label>
+                        <input type="text" class="form-control" id="suggest3" placeholder="">
+                    </div>
+                        
+         
+                    <div class="form-group">
+                                            
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="rating" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Overall Rating
+                            </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">Excellent</a>
+                                <a class="dropdown-item" href="#">Good</a>
+                                <a class="dropdown-item" href="#">Fair</a>
+                                <a class="dropdown-item" href="#">Bad</a>
+                                <a class="dropdown-item" href="#">Worst</a>
+                            </div>
                         </div>
-<!--                         <div>
-                          <button id="clear" class="btn">Clear</button>
-                        </div> -->
                     </div>
-                    
-<!--                     <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="validatedCustomFile">
-                        <label class="custom-file-label" for="validatedCustomFile">Additional attachment</label>
-                    </div> -->
-                    
-                    <div class="form-group agreement">
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" id="agreement" required>
-                          <label class="form-check-label" for="agreement">Agree to <a href="https://www.salesforce.com/company/legal/agreements/" target="_blank">terms and conditions</a></label>
-                        </div>
-                    </div>
-                    
+
                 </div>
                 <div class="panel-footer footer">
                     <div id="message" class="alert alert-info" role="alert" style="display: none;">
@@ -138,7 +127,7 @@
                         <span class="sr-only">Error:</span>
                         <span id="errorMessage"></span>
                     </div>
-                    <button type="submit" class="btn btn-success">Insert Record</button>
+                    <button type="submit" class="btn btn-success">Send</button>
                 </div>
             </div>
         </form>
@@ -153,16 +142,6 @@
     <script>
         $(function() {
             
-            var signaturePad = new SignaturePad(document.getElementById('signature-pad'), {
-              backgroundColor: 'rgba(245, 245, 245, 1)',
-              penColor: 'rgb(0, 0, 0)'
-            });
-
-            $("#clear").click(function (event) {
-               event.preventDefault();
-               signaturePad.clear();
-            });
-            
             $("#insertForm").submit(function(event) {
                 event.preventDefault();
 
@@ -173,49 +152,45 @@
                 $("#message").hide();
 
                 var name = $("#name").val();
-                var companyName = $("#companyName").val();
-                var temperature = $("#temperature").val();
-                var phone = $("#phone").val();
-                var email = $("#email").val();
-                var countryStay = $("#countryStay").val();
-                var identityId = $("#identityId").val();
-                var notes = $("#notes").val();
-                var agreement = document.getElementById("agreement");
+                var position = $("#position").val();
+                var learnt1 = $("#learnt1").val();
+                var learnt2 = $("#learnt2").val();
+                var learnt3 = $("#learnt3").val();
+                var suggest1 = $("#suggest1").val();
+                var suggest2 = $("#suggest2").val();
+                var suggest3 = $("#suggest3").val();
+                //var agreement = document.getElementById("agreement");
                 
-                if (name.length == 0 || companyName.length == 0 || temperature.length == 0 || phone.length == 0 || agreement.checked == false || signaturePad.isEmpty()) {
+                if (name.length == 0) {
                     errorMessage.text("All of the fields are required.");
                     error.show();
                 }
                 else {
-                    var signature = signaturePad.toDataURL('image/jpeg', 0.2);
                     
                     $.ajax({
                         url: event.target.action,
                         method: event.target.method,
                         data: JSON.stringify({
                             name: name,
-                            companyName: companyName,
-                            temperature: temperature,
-                            phone: phone,
-                            email: email,
-                            countryStay: countryStay,
-                            identityId: identityId,
-                            notes: notes,
-                            signature: signature
+                            position: position,
+                            learnt1: learnt1,
+                            learnt2: learnt2,
+                            learnt3: learnt3,
+                            suggest1: suggest1,
+                            suggest2: suggest2,
+                            suggest3: suggest3
                         }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function(data) {
                             $("#name").val("");
-                            $("#companyName").val("");
-                            $("#temperature").val("");
-                            $("#phone").val("");
-                            $("#countryStay").val("");
-                            $("#email").val("");
-                            $("#identityId").val("");
-                            $("#notes").val("");
-                            signaturePad.clear();
-                            $( "#agreement" ).prop( "checked", false );
+                            $("#position").val("");
+                            $("#learnt1").val("");
+                            $("#learnt2").val("");
+                            $("#learnt3").val("");
+                            $("#suggest1").val("");
+                            $("#suggest2").val("");
+                            $("#suggest3").val("");
                             $("#messageMessage").text("Record Inserted!");
                             $("#message").show();
                         },
