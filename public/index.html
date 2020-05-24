@@ -99,23 +99,6 @@
                         <input type="text" class="form-control" id="suggest3" placeholder="">
                     </div>
                         
-         
-                    <div class="form-group">
-                                            
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="rating" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Overall Rating
-                            </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="#">Excellent</a>
-                                <a class="dropdown-item" href="#">Good</a>
-                                <a class="dropdown-item" href="#">Fair</a>
-                                <a class="dropdown-item" href="#">Bad</a>
-                                <a class="dropdown-item" href="#">Worst</a>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
                 <div class="panel-footer footer">
                     <div id="message" class="alert alert-info" role="alert" style="display: none;">
@@ -159,7 +142,6 @@
                 var suggest1 = $("#suggest1").val();
                 var suggest2 = $("#suggest2").val();
                 var suggest3 = $("#suggest3").val();
-                //var agreement = document.getElementById("agreement");
                 
                 if (name.length == 0) {
                     errorMessage.text("All of the fields are required.");
