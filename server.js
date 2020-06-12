@@ -16,16 +16,8 @@ app.get('/api-endpoint', function(request, response) {
             contact: [ {id: 12345, name: "King Lai"},{id: 12346, name: "King King Lai"}],
             show: true 
         };
-    
-    var student = {
-  name: 'John',
-  age: 30,
-  isAdmin: false,
-  courses: ['html', 'css', 'js'],
-  wife: null
-};
 
-    response.send(JSON.stringify(student));
+    response.send(JSON.parse(jsonContent));
     
 });
 
