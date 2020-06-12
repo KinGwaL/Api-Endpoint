@@ -17,7 +17,7 @@ app.get('/api-endpoint', function(request, response) {
             show: true 
         };
 
-    response.send(JSON.parse(jsonContent));
+    response.send(JSON.parse(JSON.stringify(jsonContent)));
     
 });
 
