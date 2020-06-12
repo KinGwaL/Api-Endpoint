@@ -17,7 +17,15 @@ app.get('/api-endpoint', function(request, response) {
             show: true 
         };
     
-    response.send(JSON.stringify(jsonContent));
+    var student = {
+  name: 'John',
+  age: 30,
+  isAdmin: false,
+  courses: ['html', 'css', 'js'],
+  wife: null
+};
+
+    response.send(JSON.stringify(student));
     
 });
 
