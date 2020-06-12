@@ -1,8 +1,8 @@
 {
-  "name": "Ruby Survey",
-  "description": "Heroku Connect Example - Survey",
-  "repository": "https://github.com/KinGwaL/Heroku-Ruby-Survey",
-  "success_url": "/index.html",
+  "name": "Api Endpoint",
+  "description": "Heroku Example - Api Endpoint",
+  "repository": "https://github.com/KinGwaL/Api-Endpoint",
+  "success_url": "/api-endpoint",
   "env": {
     "PGSSLMODE": {
       "description": "Require SSL for Postgres",
