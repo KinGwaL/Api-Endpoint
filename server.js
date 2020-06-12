@@ -17,7 +17,7 @@ app.get('/api-endpoint', function(request, response) {
             show: true 
         };
     
-    response.send(options);
+    response.send(options.json());
     
 });
 
