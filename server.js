@@ -12,7 +12,7 @@ app.get('/api-endpoint', function(request, response) {
     
       var options = { 
             title: 'Title',
-            imageUrl: 'https://api.sendgrid.com/v3/marketing/contacts',
+            imageUrl: 'https://image.flaticon.com/icons/png/512/61/61456.png',
             Contact: [ {id: 12345, name: 'King Lai'},{id: 12346, name: 'King King Lai'}],
             show: true 
         };
