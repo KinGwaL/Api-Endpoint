@@ -1,7 +1,7 @@
 {
-  "name": "heroku-ruby-survey",
+  "name": "heroku-api-endpoint",
   "version": "0.0.1",
-  "description": "Heroku Connect Example - Survey",
+  "description": "Heroku Example - Api Point",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
