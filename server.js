@@ -8,7 +8,7 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 
 app.get('/api-endpoint', function(request, response) {
-    //let name = request.query.name;
+    //var nameString = request.query.name;
   
       var jsonContent = { 
             title: "Title",
