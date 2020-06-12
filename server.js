@@ -5,18 +5,10 @@ var app = express();
 
 app.set('port', process.env.PORT || 5000);
 app.use(express.static('public'));
-
-// body parser middleware
 app.use(bodyParser.json());
 
-// Error
-app.use(function(err, req, res, next) {
-  console.error(err.stack);
-  res.status(400).send(err.message);
-});
-
-app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
+app.listen(app.get('port'), function () {
+    console.log('Express server listening on port ' + app.get('port'));
 });
 
 app.get('/api-endpoint', function(request, response) {
