@@ -10,14 +10,14 @@ app.use(bodyParser.json());
 app.get('/api-endpoint', function(request, response) {
     //let name = request.query.name;
   
-      let options = { 
+      let jsonContent = { 
             title: "Title",
             imageUrl: "https://image.flaticon.com/icons/png/512/61/61456.png",
-            Contact: [ {id: 12345, name: "King Lai"},{id: 12346, name: "King King Lai"}],
+            contact: [ {id: 12345, name: "King Lai"},{id: 12346, name: "King King Lai"}],
             show: true 
         };
     
-    response.send(JSON.stringify(options));
+    response.send(JSON.stringify(jsonContent));
     
 });
 
