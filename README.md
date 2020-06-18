@@ -1,5 +1,5 @@
 # Heroku Example - Api Endpoint (Node.js version)
-This simple project is for developer who want to create an mock api quickly for testing usage. 
+This simple project is for developer who want to create an mock api quickly for testing usage. In this demo, we will be looking at how to deploy your cool NodeJS app to Heroku. By the end of this demo, we will have a API Endpoint app running on a public domain that can be accessed by anyone.
 
 ## Setup Step
 1. Go to Heroku and sign up(https://signup.heroku.com/) an account
