@@ -27,7 +27,7 @@ app.get('/api-endpoint-parameter', function(request, response) {
       var jsonContent = { 
             title: titleRequest,
             imageUrl: "https://image.flaticon.com/icons/png/512/61/61456.png",
-            contact: [ {id: 12345, name: "King Lai"},{id: 12346, name: "King King Lai"}],
+            contact: [ {id: 12345, name: "King Lai"},{id: 12346, name: "King Lai"}],
             show: true 
         };
 
