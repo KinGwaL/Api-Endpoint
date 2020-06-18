@@ -22,7 +22,7 @@ app.get('/api-endpoint', function(request, response) {
 
 //https://your-heroku-app-name.herokuapp.com/api-endpoint-parameter?tite=ABCDE
 app.get('/api-endpoint-parameter', function(request, response) {
-    var titleRequest = request.query.name;
+    var titleRequest = request.query.title; // Change .title / .name or any text based on your parameter name
     
       var jsonContent = { 
             title: titleRequest,
