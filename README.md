@@ -1,7 +1,7 @@
 # Heroku Example - Api Endpoint (Node.js version)
-This simple project is for frontend developer who want to create an mock api for testing usage. 
+This simple project is for developer who want to create an mock api quickly for testing usage. 
 
-
+## Setup Step
 1. Go to Heroku and sign up(https://signup.heroku.com/) an account
 2. In this page, click `Fork` on the top right corner to clone a copy 
 3. Click `deploy button` to create application [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/KinGwaL/Api-Endpoint)
@@ -13,7 +13,7 @@ This simple project is for frontend developer who want to create an mock api for
 5. All done! Click `View` to see how's going on. Now you can edit `Server.js` for further usage based on your requirement
 
 
-### Example
+## Example
 https://king-api-endpoint.herokuapp.com/api-endpoint
 
 ```
@@ -26,7 +26,7 @@ var jsonContent = {
 ```
 
 
-### Example With Parameter
+## Example With Parameter
 https://king-api-endpoint.herokuapp.com/api-endpoint-parameter?title=King
 
 ```
