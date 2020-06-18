@@ -5,7 +5,7 @@ This simple project is for developer who want to create an mock api quickly for 
 1. Go to Heroku and sign up(https://signup.heroku.com/) an account
 2. In this page, click `Fork` on the top right corner to clone a copy 
 3. Click `deploy button` to create application [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/KinGwaL/Api-Endpoint)
-4. Connect data to Heroku
+4. Click `Manage` and Connect Github to Heroku
 - Open Deploy tab and scroll to the `Deployment method` section
 - Select GitHub as the method
 - It will show a `Connect to GitHub` option where we can provide our GitHub repository `Api-Endpoint`. If you are doing it for the first time, Heroku will ask permission to access your GitHub account.
