@@ -54,7 +54,7 @@ app.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
 });
 
-function executeCompletionCallouts(  vOrderIds ) {
+async function executeCompletionCallouts(  vOrderIds ) {
 
     var headers = {
         "Content-Type": "application/json; charset=utf-8",
