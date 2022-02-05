@@ -2,9 +2,9 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
 //import got from 'got'; //use got for callouts
-var logger = require('pino');
+const logger = require('pino')()
 
-logger.info('this is a test of logging...');
+logger.info('hello world')
 
 
 app.set('port', process.env.PORT || 5000);
