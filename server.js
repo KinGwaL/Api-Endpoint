@@ -1,7 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
-import got from 'got'; //use got for callouts
+//import got from 'got'; //use got for callouts
 var logger = require('pino');
 
 logger.info('this is a test of logging...');
@@ -47,7 +47,9 @@ app.post('/vorder/v1/orders', function (request, response) {
 
 //CPQ_PROCESSORDER_V2
 app.post('/vorder/v2/orders', function (request, response) {
-    var jsonContent = {}; //returns empty body
+    var jsonContent = {
+        message: 'mock process order response'
+    };
     response.send(JSON.parse(JSON.stringify(jsonContent)));
 });
 
@@ -57,23 +59,23 @@ app.listen(app.get('port'), function () {
 
 async function executeCompletionCallouts(  vOrderIds ) {
 
-    var headers = {
-        "Content-Type": "application/json; charset=utf-8",
-        "Authorization": "Basic NGEwMGZmMjItY2NkNy0xMWUzLTk5ZDUtMDAwYzI5NDBlNjJj"
-      };
-    var body = {"ShadowQuoteId":vOrderIds[0],"HDAPAccountId":"900001"};
-    var calloutOptions = {
-        url: ENDPOINT_BASE_URL + '/VonShadowQuoteServices',
-        headers: headers
-    }
-    //make the new HDAP Account Id call to sfdc
-    const {
-        callResponseBody,
-        statusCode
-    } = await got( calloutOptions );
-    if (statusCode !== 200 || callResponseBody.error) {
-        throw new Error(callResponseBody.error || 'error calling sfdc with new hdap account id');
-    }
+    // var headers = {
+    //     "Content-Type": "application/json; charset=utf-8",
+    //     "Authorization": "Basic NGEwMGZmMjItY2NkNy0xMWUzLTk5ZDUtMDAwYzI5NDBlNjJj"
+    //   };
+    // var body = {"ShadowQuoteId":vOrderIds[0],"HDAPAccountId":"900001"};
+    // var calloutOptions = {
+    //     url: ENDPOINT_BASE_URL + '/VonShadowQuoteServices',
+    //     headers: headers
+    // }
+    // //make the new HDAP Account Id call to sfdc
+    // const {
+    //     callResponseBody,
+    //     statusCode
+    // } = await got( calloutOptions );
+    // if (statusCode !== 200 || callResponseBody.error) {
+    //     throw new Error(callResponseBody.error || 'error calling sfdc with new hdap account id');
+    // }
 
     //pause, then
     //make the new Zuora Account Id call to sfdc
