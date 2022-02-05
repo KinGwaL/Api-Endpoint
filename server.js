@@ -67,11 +67,11 @@ function executeCompletionCallouts(  vOrderIds ) {
     }
     //make the new HDAP Account Id call to sfdc
     const {
-        body,
+        callResponseBody,
         statusCode
     } = await got( calloutOptions );
-    if (statusCode !== 200 || body.error) {
-        throw new Error(body.error || 'error calling sfdc with new hdap account id');
+    if (statusCode !== 200 || callResponseBody.error) {
+        throw new Error(callResponseBody.error || 'error calling sfdc with new hdap account id');
     }
 
     //pause, then
