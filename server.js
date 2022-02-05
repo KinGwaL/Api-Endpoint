@@ -32,7 +32,7 @@ app.post('/vorder/v1/orders', function (request, response) {
             vOrderIds.push(orderData[key].vOrderId);
         }
         resBody = {
-            message: 'mock process order response, for orderCorrelationId: '+orderCorrelationId+' extracted these vOrderIds : '+vOrderIds
+            message: 'mock process order response, extracted these vOrderIds : '+vOrderIds
         };
         response.send(JSON.parse(JSON.stringify(resBody)));
     }else{
