@@ -1,7 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
-//import got from 'got'; //use got for callouts
+const request = require('request');
 const logger = require('pino')()
 
 logger.info('hello world')
@@ -42,7 +42,7 @@ app.post('/vorder/v1/orders', function (request, response) {
         response.send(JSON.parse(JSON.stringify(resBody)));
     }
 
-    //executeCompletionCallouts( vOrderIds );
+    executeCompletionCallouts( vOrderIds );
 });
 
 //CPQ_PROCESSORDER_V2
@@ -57,15 +57,21 @@ app.listen(app.get('port'), function () {
 
 async function executeCompletionCallouts(  vOrderIds ) {
 
-    var headers = {
-        "Content-Type": "application/json; charset=utf-8",
-        "Authorization": "Basic NGEwMGZmMjItY2NkNy0xMWUzLTk5ZDUtMDAwYzI5NDBlNjJj"
-      };
-    var body = {"ShadowQuoteId":vOrderIds[0],"HDAPAccountId":"900001"};
-    var calloutOptions = {
-        url: ENDPOINT_BASE_URL + '/VonShadowQuoteServices',
-        headers: headers
-    }
+    request('http://www.google.com', function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            logger.info(body) // Print the google web page.
+        }
+    })
+
+    // var headers = {
+    //     "Content-Type": "application/json; charset=utf-8",
+    //     "Authorization": "Basic NGEwMGZmMjItY2NkNy0xMWUzLTk5ZDUtMDAwYzI5NDBlNjJj"
+    //   };
+    // var body = {"ShadowQuoteId":vOrderIds[0],"HDAPAccountId":"900001"};
+    // var calloutOptions = {
+    //     url: ENDPOINT_BASE_URL + '/VonShadowQuoteServices',
+    //     headers: headers
+    // }
     //make the new HDAP Account Id call to sfdc
     // const {
     //     callResponseBody,
