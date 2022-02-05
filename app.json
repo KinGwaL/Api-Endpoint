@@ -1,7 +1,7 @@
 {
   "name": "Api Endpoint",
-  "description": "Heroku Example - Api Endpoint",
-  "repository": "https://github.com/KinGwaL/Api-Endpoint",
+  "description": "A set of Mock API endpoints to mimic vServices",
+  "repository": "https://github.com/sfdcjames/Api-Endpoint",
   "success_url": "/api-endpoint",
   "env": {
     "PGSSLMODE": {

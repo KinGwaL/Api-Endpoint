@@ -1,7 +1,7 @@
 {
   "name": "heroku-api-endpoint",
   "version": "0.0.1",
-  "description": "Heroku Example - Api Point",
+  "description": "An app to mock the behavior of vServices APIs",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
