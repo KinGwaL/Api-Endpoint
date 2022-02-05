@@ -1,7 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
-var got = require('got'); //use got for callouts
+import got from 'got'; //use got for callouts
 var logger = require('pino');
 
 logger.info('this is a test of logging...');
