@@ -17,7 +17,7 @@ const ENDPOINT_BASE_URL = 'https://vonage--turkey.my.salesforce.com/services/ape
 //CPQ_PROCESSORDER
 app.post('/vorder/v1/orders', function (request, response) {
     logger.info('/vorder/v1/orders called');
-    logger.info('request body: '+request.body);
+    logger.info(request.body);
     /***
      * example request
      * 
@@ -26,7 +26,6 @@ app.post('/vorder/v1/orders', function (request, response) {
     var resBody = {};
     if(request.body){
         var orderData = request.body;
-        logger.info('size of request array - '+orderData.length());
  
         var vOrderIds = [];
         for( key in orderData){
