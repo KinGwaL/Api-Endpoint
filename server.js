@@ -25,7 +25,8 @@ app.post('/vorder/v1/orders', function (request, response) {
      */
     var resBody = {};
     if(request.body){
-        var orderData = JSON.parse(request.body);
+        var orderData = request.body;
+        logger.info('size of request array - '+orderData.length());
  
         var vOrderIds = [];
         for( key in orderData){
