@@ -47,9 +47,7 @@ app.post('/vorder/v1/orders', function (request, response) {
 
 //CPQ_PROCESSORDER_V2
 app.post('/vorder/v2/orders', function (request, response) {
-    var jsonContent = {
-        message: 'mock process order response'
-    };
+    var jsonContent = {}; //returns empty body
     response.send(JSON.parse(JSON.stringify(jsonContent)));
 });
 
@@ -59,16 +57,16 @@ app.listen(app.get('port'), function () {
 
 async function executeCompletionCallouts(  vOrderIds ) {
 
-    // var headers = {
-    //     "Content-Type": "application/json; charset=utf-8",
-    //     "Authorization": "Basic NGEwMGZmMjItY2NkNy0xMWUzLTk5ZDUtMDAwYzI5NDBlNjJj"
-    //   };
-    // var body = {"ShadowQuoteId":vOrderIds[0],"HDAPAccountId":"900001"};
-    // var calloutOptions = {
-    //     url: ENDPOINT_BASE_URL + '/VonShadowQuoteServices',
-    //     headers: headers
-    // }
-    // //make the new HDAP Account Id call to sfdc
+    var headers = {
+        "Content-Type": "application/json; charset=utf-8",
+        "Authorization": "Basic NGEwMGZmMjItY2NkNy0xMWUzLTk5ZDUtMDAwYzI5NDBlNjJj"
+      };
+    var body = {"ShadowQuoteId":vOrderIds[0],"HDAPAccountId":"900001"};
+    var calloutOptions = {
+        url: ENDPOINT_BASE_URL + '/VonShadowQuoteServices',
+        headers: headers
+    }
+    //make the new HDAP Account Id call to sfdc
     // const {
     //     callResponseBody,
     //     statusCode
