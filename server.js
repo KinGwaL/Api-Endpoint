@@ -1,10 +1,10 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const app = express();
-const got = require('got'); //use got for callouts
-const logger = require('pino');
+var express = require('express');
+var bodyParser = require('body-parser');
+var app = express();
+//var got = require('got'); //use got for callouts
+//var logger = require('pino');
 
-logger.info('this is a test of logging...');
+//logger.info('this is a test of logging...');
 
 
 app.set('port', process.env.PORT || 5000);
@@ -16,7 +16,7 @@ const ENDPOINT_BASE_URL = 'https://vonage--turkey.my.salesforce.com/services/ape
 
 //CPQ_PROCESSORDER
 app.post('/vorder/v1/orders', function (request, response) {
-    logger.info('/vorder/v1/orders called');
+    //logger.info('/vorder/v1/orders called');
     /***
      * example request
      * 
