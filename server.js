@@ -33,7 +33,8 @@ const ORG_CONFIG = {
 var sfdc_access_token;
 var sfdc_instance_url;
 
-var privatekey = fs.readFileSync(path.resolve(__dirname, 'key.pem'));
+//var privatekey = fs.readFileSync(path.resolve(__dirname, 'key.pem'));
+var privatekey = process.env.PRIVATE_KEY;
 var jwtparams = {
     iss: ORG_CONFIG.consumerKey,
     prn: ORG_CONFIG.username,
