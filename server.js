@@ -16,6 +16,7 @@ const ORG_CONFIG = {
     webservicesPath: process.env.WEBSERVICES_BASE_URL
 };
 var accessToken;
+var lastGrantDateTime;
 
 
 //CPQ_PROCESSORDER
@@ -63,19 +64,26 @@ async function executeCompletionCallouts(vOrderIds) {
 
     //authenticate if needed
     authenticateToSFDC();
-    var headers = {
-        "Content-Type": "application/json; charset=utf-8",
-        "Authorization": "Basic "+accessToken
-      };
+    
     var uri = ORG_CONFIG.webservicesPath + '/VonShadowQuoteServices';
     var requestBody = {"ShadowQuoteId":vOrderIds[0],"HDAPAccountId":"900001"};
    
-    //make the new HDAP Account Id call to sfdc
-    // request.post(uri, function (error, response, body) {
-    //     if (!error && response.statusCode == 200) {
-    //         logger.info(body) // Print the google web page.
-    //     }
-    // })
+    axios({
+        headers: {
+            'Content-Type': "application/json; charset=utf-8",
+            'Authorization': "Basic "+accessToken
+        },
+        method: 'post',
+        url: uri,
+        data: requestBody
+      }).then(function (response) {
+            logger.info(response);
+            logger.info('sfdc VonShadowQuoteServices returned response');
+          })
+          .catch(function (error) {
+            logger.info(error);
+            logger.info('sfdc VonShadowQuoteServices returned error');
+          });
 
     //pause, then
     //make the new Zuora Account Id call to sfdc
@@ -85,82 +93,33 @@ async function executeCompletionCallouts(vOrderIds) {
 }
 
 
-// OAuth1.0 - 3-legged server side flow
+
 function authenticateToSFDC() {
 
     logger.info('got path config? => ' + ORG_CONFIG.webservicesPath);
     logger.info('got key config? => ' + ORG_CONFIG.consumerKey);
-
+//TODO set and check datetime of last grant - session is max 2hours
     if (!accessToken) {
-        // step 1
-        // const qs = require('querystring'),
-        //     oauth = {
-        //         callback: 'https://vservices-mock-1.herokuapp.com',
-        //         username: ORG_CONFIG.username,
-        //         password: ORG_CONFIG.password,
-        //         grant_type: 'password',
-        //         client_id: ORG_CONFIG.consumerKey,
-        //         client_secret: ORG_CONFIG.consumerSecret
-        //     },
-        //     url = 'https://test.salesforce.com/services/oauth2/token';
 
-        // request.post({
-        //     url: url,
-        //     oauth: oauth
-        // }, function (e, r, body) {
-        //     // Ideally, you would take the body in the response
-        //     // and construct a URL that a user clicks on (like a sign in button).
-        //     // The verifier is only available in the response after a user has
-        //     // verified with twitter that they are authorizing your app.
+        var oauth = {
+                callback: 'https://vservices-mock-1.herokuapp.com',
+                username: ORG_CONFIG.username,
+                password: ORG_CONFIG.password,
+                grant_type: 'password',
+                client_id: ORG_CONFIG.consumerKey,
+                client_secret: ORG_CONFIG.consumerSecret
+            };
+        var url = 'https://test.salesforce.com/services/oauth2/token';
 
-        //     // step 2
-        //     const req_data = qs.parse(body)
-        //     //const uri = 'https://api.twitter.com/oauth/authenticate' +
-        //     //    '?' + qs.stringify({
-        //     accessToken = req_data.access_token
-        //     logger.info('got access token => '+accessToken)
-        //     //    })
-        //     // redirect the user to the authorize uri
-
-        //     // step 3
-        //     // after the user is redirected back to your server
-        //     // const auth_data = qs.parse(body),
-        //     //     oauth = {
-        //     //         consumer_key: CONSUMER_KEY,
-        //     //         consumer_secret: CONSUMER_SECRET,
-        //     //         token: auth_data.oauth_token,
-        //     //         token_secret: req_data.oauth_token_secret,
-        //     //         verifier: auth_data.oauth_verifier
-        //     //     },
-        //     //     url = 'https://api.twitter.com/oauth/access_token';
-        //     // request.post({
-        //     //     url: url,
-        //     //     oauth: oauth
-        //     // }, function (e, r, body) {
-        //     //     // ready to make signed requests on behalf of the user
-        //     //     const perm_data = qs.parse(body),
-        //     //         oauth = {
-        //     //             consumer_key: CONSUMER_KEY,
-        //     //             consumer_secret: CONSUMER_SECRET,
-        //     //             token: perm_data.oauth_token,
-        //     //             token_secret: perm_data.oauth_token_secret
-        //     //         },
-        //     //         url = 'https://api.twitter.com/1.1/users/show.json',
-        //     //         qs = {
-        //     //             screen_name: perm_data.screen_name,
-        //     //             user_id: perm_data.user_id
-        //     //         };
-        //     //     request.get({
-        //     //         url: url,
-        //     //         oauth: oauth,
-        //     //         qs: qs,
-        //     //         json: true
-        //     //     }, function (e, r, user) {
-        //     //         console.log(user)
-        //     //     })
-        //     // })
-        // })
+        axios.post(url, oauth)
+          .then(function (response) {
+            logger.info(response);
+            accessToken = JSON.parse(response).access_token;
+            logger.info('got access token => '+accessToken);
+          })
+          .catch(function (error) {
+            logger.info(error);
+            throw new Error(error);
+          });
     }
-
-
 }
