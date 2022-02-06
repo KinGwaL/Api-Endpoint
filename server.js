@@ -104,7 +104,7 @@ async function executeCompletionCallouts(vOrderIds) {
 
 
 
-function authenticateToSFDC() {
+async function authenticateToSFDC() {
 
     logger.info('got path config? => ' + ORG_CONFIG.webservicesPath);
     logger.info('got key config? => ' + ORG_CONFIG.consumerKey);
@@ -113,22 +113,23 @@ function authenticateToSFDC() {
     
         var uri = 'https://test.salesforce.com/services/oauth2/token';
 
-        const formData = new URLSearchParams();
-        formData.append('callback', 'https://vservices-mock-1.herokuapp.com');
-        formData.append('username', ORG_CONFIG.username);
-        formData.append('password', ORG_CONFIG.password);
-        formData.append('grant_type', 'password');
-        formData.append('client_id', ORG_CONFIG.consumerKey);
-        formData.append('client_secret', ORG_CONFIG.consumerSecret);
+        FormData.append('callback', 'https://vservices-mock-1.herokuapp.com');
+        FormData.append('username', ORG_CONFIG.username);
+        FormData.append('password', ORG_CONFIG.password);
+        FormData.append('grant_type', 'password');
+        FormData.append('client_id', ORG_CONFIG.consumerKey);
+        FormData.append('client_secret', ORG_CONFIG.consumerSecret);
+
+    const contentLength = await FormData.getLength();
    
-    axios({
+    await axios({
         headers: {
-            'Content-Type': "application/form-data",
-            'Authorization': "Basic "+accessToken
+            ...FormData.getHeaders(),
+            'content-length': contentLength
         },
         method: 'post',
         url: uri,
-        data: formData
+        data: FormData
       }).then(function (response) {
             logger.info(response);
             accessToken = JSON.parse(response).access_token;
