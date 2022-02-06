@@ -8,6 +8,10 @@ const moment = require('moment');
 const jwt = require('jsonwebtoken');
 var path = require("path");
 var jsforce = require("jsforce");
+const { 
+    v1: uuidv1,
+    v4: uuidv4,
+  } = require('uuid');
 
 
 //setup the server
@@ -119,13 +123,15 @@ app.listen(app.get('port'), function () {
 
 async function executeQuoteCompletionCallouts(vOrderIds) {
 
+    var accountNumber = 900001;
+
     if (sfdc_access_token) {
 
         for (key in vOrderIds) {
             //TODO, incrementing accountnumbers... use simple mongodb table or query the org..
             var requestBody = {
                 "ShadowQuoteId": vOrderIds[key],
-                "HDAPAccountId": "900001"
+                "HDAPAccountId": accountNumber
             };
             var uri = '/VonShadowQuoteServices/';
             var conn = new jsforce.Connection({
@@ -144,10 +150,10 @@ async function executeQuoteCompletionCallouts(vOrderIds) {
             await sleep(1000);
             //then
             //make the new Zuora Account Id call to sfdc
-            //TODO, incrementing zuoraccountids?... use guid generator?
+            var zuoraId = uuidv4();
             requestBody = {
                 "ShadowQuoteId": vOrderIds[key],
-                "ZuoraAccountId": "8ad084a67ebdc958017ec48a491c71a7"
+                "ZuoraAccountId": zuoraId
             };
             conn.apex.post(uri, requestBody, function (err, res) {
                 if (err) {
@@ -164,16 +170,18 @@ async function executeQuoteCompletionCallouts(vOrderIds) {
                 "ShadowQuoteId": vOrderIds[key],
                 "Status": "Complete"
             };
+            uri = '/VonUpdateSQStatus/';
             conn.apex.post(uri, requestBody, function (err, res) {
                 if (err) {
                     return console.error(err);
                 }
-                console.log('VonShadowQuoteServices, ' + vOrderIds[key] + ' : set status complete response: ', res);;
+                console.log('/VonUpdateSQStatus/, ' + vOrderIds[key] + ' : set status complete response: ', res);;
             });
 
             //pause
             await sleep(1000);
             //then repeat
+            accountNumber++;
         }
 
 
