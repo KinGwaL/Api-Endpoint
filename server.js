@@ -1,6 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-const got = require('got');
+const axios = require('axios').default;
 const logger = require('pino')()
 
 var app = express();
