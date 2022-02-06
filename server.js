@@ -1,6 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 const axios = require('axios').default;
+const FormData = require('form-data');
 const logger = require('pino')()
 
 var app = express();
@@ -100,19 +101,26 @@ function authenticateToSFDC() {
     logger.info('got key config? => ' + ORG_CONFIG.consumerKey);
 //TODO set and check datetime of last grant - session is max 2hours
     if (!accessToken) {
+    
+        var uri = 'https://test.salesforce.com/services/oauth2/token';
 
-        var oauth = {
-                callback: 'https://vservices-mock-1.herokuapp.com',
-                username: ORG_CONFIG.username,
-                password: ORG_CONFIG.password,
-                grant_type: 'password',
-                client_id: ORG_CONFIG.consumerKey,
-                client_secret: ORG_CONFIG.consumerSecret
-            };
-        var url = 'https://test.salesforce.com/services/oauth2/token';
-
-        axios.post(url, oauth)
-          .then(function (response) {
+        const formData = new URLSearchParams();
+        formData.append(callback, 'https://vservices-mock-1.herokuapp.com');
+        formData.append(username, ORG_CONFIG.username);
+        formData.append(password, ORG_CONFIG.password);
+        formData.append(grant_type, 'password');
+        formData.append(client_id, ORG_CONFIG.consumerKey);
+        formData.append(client_secret, ORG_CONFIG.consumerSecret);
+   
+    axios({
+        headers: {
+            'Content-Type': "application/x-www-form-urlencoded",
+            'Authorization': "Basic "+accessToken
+        },
+        method: 'post',
+        url: uri,
+        data: formData
+      }).then(function (response) {
             logger.info(response);
             accessToken = JSON.parse(response).access_token;
             logger.info('got access token => '+accessToken);
