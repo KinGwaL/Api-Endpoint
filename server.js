@@ -97,7 +97,7 @@ async function executeCompletionCallouts(vOrderIds) {
         //pause, then
         //make the updateSQStatus call to sfdc
     }else{
-
+        console.log(' we dont have sfdc accessToken');
     }
     
 }
@@ -123,7 +123,7 @@ function authenticateToSFDC() {
    
     axios({
         headers: {
-            'Content-Type': "application/x-www-form-urlencoded",
+            'Content-Type': "application/form-data",
             'Authorization': "Basic "+accessToken
         },
         method: 'post',
