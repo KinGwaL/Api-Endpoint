@@ -4,7 +4,7 @@ const axios = require('axios').default;
 const logger = require('pino')();
 const fs = require('fs');
 const querystring = require('querystring');
-const moment= require('moment');
+const moment = require('moment');
 const jwt = require('jsonwebtoken');
 var path = require("path");
 var jsforce = require("jsforce");
@@ -36,7 +36,9 @@ var jwtparams = {
     aud: ORG_CONFIG.basePath,
     exp: parseInt(moment().add(2, 'minutes').format('X'))
 };
-var jwtToken = jwt.sign(jwtparams, privatekey, { algorithm: 'RS256' });
+var jwtToken = jwt.sign(jwtparams, privatekey, {
+    algorithm: 'RS256'
+});
 
 var params = {
     grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
@@ -97,18 +99,18 @@ app.listen(app.get('port'), function () {
     console.log('attempting to get sfdc access token');
     //get our token
     axios.post(token_url, querystring.stringify(params))
-    .then(function (res) {
+        .then(function (res) {
 
-        sfdc_access_token = res.data.access_token;
-        sfdc_instance_url = res.data.instance_url;
-        console.log('Express server listening on port ' + app.get('port'));
-        console.log(' sfdc access token '+sfdc_access_token);
+            sfdc_access_token = res.data.access_token;
+            sfdc_instance_url = res.data.instance_url;
+            console.log('Express server listening on port ' + app.get('port'));
+            console.log(' sfdc access token ' + sfdc_access_token);
 
-    }).catch(function (error){
-        console.log(error.toJSON());
-    });;
+        }).catch(function (error) {
+            console.log(error.toJSON());
+        });;
 
-    
+
 });
 
 
@@ -117,29 +119,73 @@ app.listen(app.get('port'), function () {
 
 async function executeQuoteCompletionCallouts(vOrderIds) {
 
-    if(sfdc_access_token){
-//TODO, incrementing accountnumbers... use simple mongodb table or query the org..
-        var requestBody = {"ShadowQuoteId":vOrderIds[0],"HDAPAccountId":"900001"};
-        var uri = '/VonShadowQuoteServices/';
-        var conn = new jsforce.Connection({
-            instanceUrl: sfdc_instance_url,
-            accessToken: sfdc_access_token
-        });
+    if (sfdc_access_token) {
 
-        conn.apex.post(uri, requestBody, function(err, res) {
-            if (err) { return console.error(err); }
-            console.log("VonShadowQuoteServices response: ", res);
-          });
+        for (key in vOrderIds) {
+            //TODO, incrementing accountnumbers... use simple mongodb table or query the org..
+            var requestBody = {
+                "ShadowQuoteId": vOrderIds[key],
+                "HDAPAccountId": "900001"
+            };
+            var uri = '/VonShadowQuoteServices/';
+            var conn = new jsforce.Connection({
+                instanceUrl: sfdc_instance_url,
+                accessToken: sfdc_access_token
+            });
 
-        //pause, then
-        //make the new Zuora Account Id call to sfdc
-    
-        //pause, then
-        //make the updateSQStatus call to sfdc
+            conn.apex.post(uri, requestBody, function (err, res) {
+                if (err) {
+                    return console.error(err);
+                }
+                console.log('VonShadowQuoteServices, ' + vOrderIds[key] + ' : set hdapid response: ', res);
+            });
+
+            //pause
+            await sleep(1000);
+            //then
+            //make the new Zuora Account Id call to sfdc
+            //TODO, incrementing zuoraccountids?... use guid generator?
+            requestBody = {
+                "ShadowQuoteId": vOrderIds[key],
+                "ZuoraAccountId": "8ad084a67ebdc958017ec48a491c71a7"
+            };
+            conn.apex.post(uri, requestBody, function (err, res) {
+                if (err) {
+                    return console.error(err);
+                }
+                console.log('VonShadowQuoteServices, ' + vOrderIds[key] + ' : set zAccountId response: ', res);;
+            });
+
+            //pause,
+            await sleep(1000);
+            //then
+            //make the updateSQStatus call to sfdc
+            requestBody = {
+                "ShadowQuoteId": vOrderIds[key],
+                "Status": "Complete"
+            };
+            conn.apex.post(uri, requestBody, function (err, res) {
+                if (err) {
+                    return console.error(err);
+                }
+                console.log('VonShadowQuoteServices, ' + vOrderIds[key] + ' : set status complete response: ', res);;
+            });
+
+            //pause
+            await sleep(1000);
+            //then repeat
+        }
 
 
-    }else{
+
+    } else {
         console.log('process order completion calls - we dont have sfdc accessToken');
     }
-    
+
 }
+
+function sleep(ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+  }
