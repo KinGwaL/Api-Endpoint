@@ -122,13 +122,9 @@ async function authenticateToSFDC() {
         formData.append('client_id', ORG_CONFIG.consumerKey);
         formData.append('client_secret', ORG_CONFIG.consumerSecret);
 
-    const contentLength = await formData.getLength();
-   
+    
     await axios({
-        headers: {
-            ...formData.getHeaders(),
-            'content-length': contentLength
-        },
+        headers: formData.getHeaders(),
         method: 'post',
         url: uri,
         data: formData
