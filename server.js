@@ -130,7 +130,7 @@ async function authenticateToSFDC() {
         data: formData
       }).then(function (response) {
             logger.info(response);
-            accessToken = JSON.parse(response).access_token;
+            accessToken = response.access_token;
             logger.info('got access token => '+accessToken);
             console.log('Express server listening on port ' + app.get('port'));
           })
