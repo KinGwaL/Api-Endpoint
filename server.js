@@ -114,12 +114,12 @@ function authenticateToSFDC() {
         var uri = 'https://test.salesforce.com/services/oauth2/token';
 
         const formData = new URLSearchParams();
-        formData.append(callback, 'https://vservices-mock-1.herokuapp.com');
-        formData.append(username, ORG_CONFIG.username);
-        formData.append(password, ORG_CONFIG.password);
-        formData.append(grant_type, 'password');
-        formData.append(client_id, ORG_CONFIG.consumerKey);
-        formData.append(client_secret, ORG_CONFIG.consumerSecret);
+        formData.append('callback', 'https://vservices-mock-1.herokuapp.com');
+        formData.append('username', ORG_CONFIG.username);
+        formData.append('password', ORG_CONFIG.password);
+        formData.append('grant_type', 'password');
+        formData.append('client_id', ORG_CONFIG.consumerKey);
+        formData.append('client_secret', ORG_CONFIG.consumerSecret);
    
     axios({
         headers: {
