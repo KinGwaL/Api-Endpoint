@@ -20,6 +20,8 @@ var accessToken;
 var lastGrantDateTime;
 
 
+
+
 //CPQ_PROCESSORDER
 app.post('/vorder/v1/orders', function (request, response) {
     logger.info('/vorder/v1/orders called');
@@ -58,39 +60,46 @@ app.post('/vorder/v2/orders', function (request, response) {
 });
 
 app.listen(app.get('port'), function () {
-    console.log('Express server listening on port ' + app.get('port'));
+    console.log('attempting to get sfdc access token');
+    //get token
+    //TODO - get this every 24hrs while app is running?
+    authenticateToSFDC();
+    
 });
 
 async function executeCompletionCallouts(vOrderIds) {
 
-    //authenticate if needed
-    authenticateToSFDC();
     
-    var uri = ORG_CONFIG.webservicesPath + '/VonShadowQuoteServices';
-    var requestBody = {"ShadowQuoteId":vOrderIds[0],"HDAPAccountId":"900001"};
-   
-    axios({
-        headers: {
-            'Content-Type': "application/json; charset=utf-8",
-            'Authorization': "Basic "+accessToken
-        },
-        method: 'post',
-        url: uri,
-        data: requestBody
-      }).then(function (response) {
-            logger.info(response);
-            logger.info('sfdc VonShadowQuoteServices returned response');
-          })
-          .catch(function (error) {
-            logger.info(error);
-            logger.info('sfdc VonShadowQuoteServices returned error');
-          });
+    if(accessToken){
+        var uri = ORG_CONFIG.webservicesPath + '/VonShadowQuoteServices';
+        var requestBody = {"ShadowQuoteId":vOrderIds[0],"HDAPAccountId":"900001"};
+       
+        axios({
+            headers: {
+                'Content-Type': "application/json; charset=utf-8",
+                'Authorization': "Basic "+accessToken
+            },
+            method: 'post',
+            url: uri,
+            data: requestBody
+          }).then(function (response) {
+                logger.info(response);
+                logger.info('sfdc VonShadowQuoteServices returned response');
+              })
+              .catch(function (error) {
+                logger.info(error);
+                logger.info('sfdc VonShadowQuoteServices returned error');
+              });
+    
+        //pause, then
+        //make the new Zuora Account Id call to sfdc
+    
+        //pause, then
+        //make the updateSQStatus call to sfdc
+    }else{
 
-    //pause, then
-    //make the new Zuora Account Id call to sfdc
-
-    //pause, then
-    //make the updateSQStatus call to sfdc
+    }
+    
 }
 
 
@@ -124,6 +133,7 @@ function authenticateToSFDC() {
             logger.info(response);
             accessToken = JSON.parse(response).access_token;
             logger.info('got access token => '+accessToken);
+            console.log('Express server listening on port ' + app.get('port'));
           })
           .catch(function (error) {
             logger.info(error);
