@@ -7,14 +7,17 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.17.1",
-    "body-parser": "^1.19.0",
-    "pg": "^4.4.0",
-    "request": "^2.88.2",
-    "get-json": "^1.0.1",
-    "express-basic-auth": "^1.2.0",
     "axios": "^0.25.0",
-    "pino": "^7.6.5"
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-basic-auth": "^1.2.0",
+    "get-json": "^1.0.1",
+    "pg": "^4.4.0",
+    "pino": "^7.6.5",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.1",
+    "path": "^0.12.7",
+    "jsforce": "^1.11.0"
   },
   "engines": {
     "node": "14.2.0"

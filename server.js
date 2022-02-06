@@ -1,25 +1,53 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 const axios = require('axios').default;
-const FormData = require('form-data');
-const logger = require('pino')()
+const logger = require('pino')();
+const fs = require('fs');
+const querystring = require('querystring');
+const moment= require('moment');
+const jwt = require('jsonwebtoken');
+var path = require("path");
+var jsforce = require("jsforce");
 
+
+//setup the server
 var app = express();
 app.set('port', process.env.PORT || 5000);
 app.use(express.static('public'));
 app.use(bodyParser.json());
 
+//prepare jwt
 const ORG_CONFIG = {
     consumerKey: process.env.CONSUMER_KEY,
     consumerSecret: process.env.CONSUMER_SECRET,
     username: process.env.USERNAME,
     password: process.env.PASSWORD,
-    webservicesPath: process.env.WEBSERVICES_BASE_URL
+    webservicesPath: process.env.WEBSERVICES_BASE_URL,
+    basePath: 'https://test.salesforce.com'
 };
-var accessToken;
-var lastGrantDateTime;
+
+var sfdc_access_token;
+var sfdc_instance_url;
+
+var privatekey = fs.readFileSync(path.resolve(__dirname, 'key.pem'));
+var jwtparams = {
+    iss: ORG_CONFIG.consumerKey,
+    prn: ORG_CONFIG.username,
+    aud: ORG_CONFIG.basePath,
+    exp: parseInt(moment().add(2, 'minutes').format('X'))
+};
+var jwtToken = jwt.sign(jwtparams, privatekey, { algorithm: 'RS256' });
+
+var params = {
+    grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+    assertion: jwtToken
+};
+
+var token_url = new URL('/services/oauth2/token', ORG_CONFIG.basePath).toString();
 
 
+
+//CONFIGURE ROUTES
 
 
 //CPQ_PROCESSORDER
@@ -50,7 +78,7 @@ app.post('/vorder/v1/orders', function (request, response) {
         response.send(JSON.parse(JSON.stringify(resBody)));
     }
 
-    executeCompletionCallouts(vOrderIds);
+    executeQuoteCompletionCallouts(vOrderIds);
 });
 
 //CPQ_PROCESSORDER_V2
@@ -59,84 +87,59 @@ app.post('/vorder/v2/orders', function (request, response) {
     response.send(JSON.parse(JSON.stringify(jsonContent)));
 });
 
+
+
+
+//SERVER LISTENER
+
+
 app.listen(app.get('port'), function () {
     console.log('attempting to get sfdc access token');
-    //get token
-    //TODO - get this every 24hrs while app is running?
-    authenticateToSFDC();
+    //get our token
+    axios.post(token_url, querystring.stringify(params))
+    .then(function (res) {
+
+        sfdc_access_token = res.data.access_token;
+        sfdc_instance_url = res.data.instance_url;
+        console.log('Express server listening on port ' + app.get('port'));
+        console.log(' sfdc access token '+sfdc_access_token);
+
+    }).catch(function (error){
+        console.log(error.toJSON());
+    });;
+
     
 });
 
-async function executeCompletionCallouts(vOrderIds) {
 
-    
-    if(accessToken){
-        var uri = ORG_CONFIG.webservicesPath + '/VonShadowQuoteServices';
+//API IMPLEMENTATIONS
+
+
+async function executeQuoteCompletionCallouts(vOrderIds) {
+
+    if(sfdc_access_token){
+//TODO, incrementing accountnumbers... use simple mongodb table or query the org..
         var requestBody = {"ShadowQuoteId":vOrderIds[0],"HDAPAccountId":"900001"};
-       
-        axios({
-            headers: {
-                'Content-Type': "application/json; charset=utf-8",
-                'Authorization': "Basic "+accessToken
-            },
-            method: 'post',
-            url: uri,
-            data: requestBody
-          }).then(function (response) {
-                logger.info(response);
-                logger.info('sfdc VonShadowQuoteServices returned response');
-              })
-              .catch(function (error) {
-                logger.info(error);
-                logger.info('sfdc VonShadowQuoteServices returned error');
-              });
-    
+        var uri = '/VonShadowQuoteServices/';
+        var conn = new jsforce.Connection({
+            instanceUrl: sfdc_instance_url,
+            accessToken: sfdc_access_token
+        });
+
+        conn.apex.post(uri, requestBody, function(err, res) {
+            if (err) { return console.error(err); }
+            console.log("VonShadowQuoteServices response: ", res);
+          });
+
         //pause, then
         //make the new Zuora Account Id call to sfdc
     
         //pause, then
         //make the updateSQStatus call to sfdc
+
+
     }else{
-        console.log(' we dont have sfdc accessToken');
+        console.log('process order completion calls - we dont have sfdc accessToken');
     }
     
-}
-
-
-
-async function authenticateToSFDC() {
-
-    logger.info('got path config? => ' + ORG_CONFIG.webservicesPath);
-    logger.info('got key config? => ' + ORG_CONFIG.consumerKey);
-//TODO set and check datetime of last grant - session is max 2hours
-    if (!accessToken) {
-    
-        var uri = 'https://test.salesforce.com/services/oauth2/token';
-
-        const formData = new FormData();
-
-        formData.append('callback', 'https://vservices-mock-1.herokuapp.com');
-        formData.append('username', ORG_CONFIG.username);
-        formData.append('password', ORG_CONFIG.password);
-        formData.append('grant_type', 'password');
-        formData.append('client_id', ORG_CONFIG.consumerKey);
-        formData.append('client_secret', ORG_CONFIG.consumerSecret);
-
-    
-    await axios({
-        headers: formData.getHeaders(),
-        method: 'post',
-        url: uri,
-        data: formData
-      }).then(function (response) {
-            logger.info(response);
-            accessToken = response.data.access_token;
-            logger.info('got access token => '+accessToken);
-            console.log('Express server listening on port ' + app.get('port'));
-          })
-          .catch(function (error) {
-            logger.info(error);
-            throw new Error(error);
-          });
-    }
 }
