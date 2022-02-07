@@ -130,65 +130,64 @@ function doCPQProcessOrder(isNewLogo, request, response) {
 }
 
 async function executeQuoteCompletionCallouts(isNewLogo, vOrderIds) {
-
-    var conn = new jsforce.Connection({
-        instanceUrl: sfdc_instance_url,
-        accessToken: sfdc_access_token
-    });
-
-    //get accountNumber watermark
-    var accountNumber;
-    if(isNewLogo){
-        conn.query("SELECT Id, AccountNumber FROM Account ORDER BY AccountNumber DESC LIMIT 1", function(err, result) {
-            if (err) { return console.error(err); }
-                accountNumber = result.records[0]? result.records[0].AccountNumber : 900001;
-                console.log("fetched account number watermark? : " +accountNumber);
-        });
-    }
-
-    
-
     if (sfdc_access_token) {
+        var conn = new jsforce.Connection({
+            instanceUrl: sfdc_instance_url,
+            accessToken: sfdc_access_token
+        });
 
+
+        if (isNewLogo) {
+            //get accountNumber watermark
+            var accountNumber;
+            conn.query("SELECT Id, AccountNumber FROM Account ORDER BY AccountNumber DESC LIMIT 1", function (err, result) {
+                if (err) {
+                    return console.error(err);
+                }
+                console.log("fetched account number watermark? : " + result.records[0]);
+                accountNumber = result.records[0] ? parseInt(result.records[0].AccountNumber) : 900001;
+                console.log("fetched account number watermark? : " + accountNumber);
+
+                for (key in vOrderIds) {
+                    accountNumber = accountNumber + 1; //next accountNumber
+                    console.log("iterating newlog vorderIds, we'll create this accountnumber : " + accountNumber);
+                    var requestBody = {
+                        "ShadowQuoteId": vOrderIds[key],
+                        "HDAPAccountId": accountNumber
+                    };
+                    var uri = '/VonShadowQuoteServices/';
+                    conn.apex.post(uri, requestBody, function (err, res) {
+                        if (err) {
+                            return console.error(err);
+                        }
+                        console.log('VonShadowQuoteServices, ' + vOrderIds[key] + ' : set hdapid response: ', res);
+                    });
+
+                    //pause
+                    await sleep(1000);
+                    //then
+                    //make the new Zuora Account Id call to sfdc
+                    var zuoraId = uuidv4();
+                    requestBody = {
+                        "ShadowQuoteId": vOrderIds[key],
+                        "ZuoraAccountId": zuoraId
+                    };
+                    conn.apex.post(uri, requestBody, function (err, res) {
+                        if (err) {
+                            return console.error(err);
+                        }
+                        console.log('VonShadowQuoteServices, ' + vOrderIds[key] + ' : set zAccountId response: ', res);;
+                    });
+
+                    //pause,
+                    await sleep(1000);
+                    //then
+                }
+            });
+        }
+
+        //make the updateSQStatus calls to sfdc
         for (key in vOrderIds) {
-            
-            if (isNewLogo) {
-                accountNumber = accountNumber + 1; //next accountNumber
-                console.log("iterating newlog vorderIds, we'll create this accountnumber : " +accountNumber);
-                var requestBody = {
-                    "ShadowQuoteId": vOrderIds[key],
-                    "HDAPAccountId": accountNumber
-                };
-                var uri = '/VonShadowQuoteServices/';
-                conn.apex.post(uri, requestBody, function (err, res) {
-                    if (err) {
-                        return console.error(err);
-                    }
-                    console.log('VonShadowQuoteServices, ' + vOrderIds[key] + ' : set hdapid response: ', res);
-                });
-
-                //pause
-                await sleep(1000);
-                //then
-                //make the new Zuora Account Id call to sfdc
-                var zuoraId = uuidv4();
-                requestBody = {
-                    "ShadowQuoteId": vOrderIds[key],
-                    "ZuoraAccountId": zuoraId
-                };
-                conn.apex.post(uri, requestBody, function (err, res) {
-                    if (err) {
-                        return console.error(err);
-                    }
-                    console.log('VonShadowQuoteServices, ' + vOrderIds[key] + ' : set zAccountId response: ', res);;
-                });
-
-                //pause,
-                await sleep(1000);
-                //then
-            }
-
-            //make the updateSQStatus call to sfdc
             requestBody = {
                 "ShadowQuoteId": vOrderIds[key],
                 "Status": "Complete"
@@ -206,11 +205,11 @@ async function executeQuoteCompletionCallouts(isNewLogo, vOrderIds) {
             //then repeat
         }
 
-
-
-    } else {
-        console.log('process order completion calls - we dont have sfdc accessToken');
     }
+
+} else {
+    console.log('process order completion calls - we dont have sfdc accessToken');
+}
 
 }
 
