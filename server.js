@@ -60,7 +60,7 @@ app.post('/vorder/v1/orders', function (request, response) {
     doCPQProcessOrder(true, request, response);
 });
 
-//CPQ_PROCESSORDER_V2
+//CPQ_PROCESSORDER_V2_NEW
 app.post('/vorder/v2/orders', function (request, response) {
     console.log('/vorder/v2/orders called');
     console.log(request.body);
@@ -68,12 +68,18 @@ app.post('/vorder/v2/orders', function (request, response) {
 });
 
 //CPQ_AAT_PROCESSORDER
-app.post('/vorder/{ACCOUNT_NUMBER}/v1/orders', function (request, response) {
-    console.log('CPQ_AAT_PROCESSORDER - /vorder/{ACCOUNT_NUMBER}/v1/orders called');
+app.post('/vorder/{hdapAccountId}/v1/orders', function (request, response) {
+    console.log('CPQ_AAT_PROCESSORDER - /vorder/{hdapAccountId}/v1/orders called');
     console.log(request.body);
     doCPQProcessOrder(false, request, response);
 });
 
+//CPQ_PROCESSORDER_V2_EXISTING
+app.post('/vorder/account/{vAccountId}/v2/orders', function (request, response) {
+    console.log('//CPQ_PROCESSORDER_V2_EXISTING - /vorder/account/{vAccountId}/v2/orders called');
+    console.log(request.body);
+    doCPQProcessOrder(false, request, response);
+});
 
 
 //LISTENER
