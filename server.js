@@ -205,11 +205,9 @@ async function executeQuoteCompletionCallouts(isNewLogo, vOrderIds) {
             //then repeat
         }
 
+    }else {
+        console.log('process order completion calls - we dont have sfdc accessToken');
     }
-
-} else {
-    console.log('process order completion calls - we dont have sfdc accessToken');
-}
 
 }
 
