@@ -145,8 +145,8 @@ async function executeQuoteCompletionCallouts(isNewLogo, vOrderIds) {
                     return console.error(err);
                 }
                 console.log(result);
-                if(result.records.expr0){
-                    accountNumber = accountNumber + parseInt(result.records.expr0);
+                if(result.records[0].expr0){
+                    accountNumber = accountNumber + result.records[0].expr0;
                 }
                 console.log("fetched our account number watermark? : " + accountNumber);
 
