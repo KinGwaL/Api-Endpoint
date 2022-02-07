@@ -156,32 +156,27 @@ async function executeQuoteCompletionCallouts(isNewLogo, vOrderIds) {
                         "HDAPAccountId": accountNumber
                     };
                     var uri = '/VonShadowQuoteServices/';
+                    //send account number to sfdc
                     conn.apex.post(uri, requestBody, function (err, res) {
                         if (err) {
                             return console.error(err);
                         }
                         console.log('VonShadowQuoteServices, ' + vOrderIds[key] + ' : set hdapid response: ', res);
-                    });
 
-                    //pause
-                    await sleep(1000);
-                    //then
-                    //make the new Zuora Account Id call to sfdc
-                    var zuoraId = uuidv4();
-                    requestBody = {
-                        "ShadowQuoteId": vOrderIds[key],
-                        "ZuoraAccountId": zuoraId
-                    };
-                    conn.apex.post(uri, requestBody, function (err, res) {
-                        if (err) {
-                            return console.error(err);
-                        }
-                        console.log('VonShadowQuoteServices, ' + vOrderIds[key] + ' : set zAccountId response: ', res);;
+                        //then
+                        //make the new Zuora Account Id call to sfdc
+                        var zuoraId = uuidv4();
+                        requestBody = {
+                            "ShadowQuoteId": vOrderIds[key],
+                            "ZuoraAccountId": zuoraId
+                        };
+                        conn.apex.post(uri, requestBody, function (err, res) {
+                            if (err) {
+                                return console.error(err);
+                            }
+                            console.log('VonShadowQuoteServices, ' + vOrderIds[key] + ' : set zAccountId response: ', res);;
+                        });
                     });
-
-                    //pause,
-                    await sleep(1000);
-                    //then
                 }
             });
         }
@@ -205,7 +200,7 @@ async function executeQuoteCompletionCallouts(isNewLogo, vOrderIds) {
             //then repeat
         }
 
-    }else {
+    } else {
         console.log('process order completion calls - we dont have sfdc accessToken');
     }
 
