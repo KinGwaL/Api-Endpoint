@@ -110,6 +110,10 @@ function doCPQProcessOrder(isNewLogo, request, response) {
     var resBody = {};
     if (request.body) {
         var orderData = request.body;
+        orderData.sort(function(x, y) {
+            // true values first
+            return (x.primaryLocation === y.primaryLocation)? 0 : x.primaryLocation? -1 : 1;
+        });
 
         var vOrderIds = [];
         for (key in orderData) {
