@@ -131,6 +131,11 @@ function doCPQProcessOrder(isNewLogo, request, response) {
 
 async function executeQuoteCompletionCallouts(isNewLogo, vOrderIds) {
 
+    var conn = new jsforce.Connection({
+        instanceUrl: sfdc_instance_url,
+        accessToken: sfdc_access_token
+    });
+
     //get accountNumber watermark
     var accountNumber;
     if(isNewLogo){
@@ -155,11 +160,6 @@ async function executeQuoteCompletionCallouts(isNewLogo, vOrderIds) {
                     "HDAPAccountId": accountNumber
                 };
                 var uri = '/VonShadowQuoteServices/';
-                var conn = new jsforce.Connection({
-                    instanceUrl: sfdc_instance_url,
-                    accessToken: sfdc_access_token
-                });
-
                 conn.apex.post(uri, requestBody, function (err, res) {
                     if (err) {
                         return console.error(err);
