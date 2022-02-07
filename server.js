@@ -131,14 +131,25 @@ function doCPQProcessOrder(isNewLogo, request, response) {
 
 async function executeQuoteCompletionCallouts(isNewLogo, vOrderIds) {
 
-    var accountNumber = 900001;
+    //get accountNumber watermark
+    var accountNumber;
+    if(isNewLogo){
+        conn.query("SELECT Id, AccountNumber FROM Account ORDER BY AccountNumber DESC LIMIT 1", function(err, result) {
+            if (err) { return console.error(err); }
+                accountNumber = result.records[0]? result.records[0].AccountNumber : 900001;
+                console.log("fetched account number watermark? : " +accountNumber);
+        });
+    }
+
+    
 
     if (sfdc_access_token) {
 
         for (key in vOrderIds) {
-
+            
             if (isNewLogo) {
-                //TODO, incrementing accountnumbers... use simple mongodb table or query the org..
+                accountNumber = accountNumber + 1; //next accountNumber
+                console.log("iterating newlog vorderIds, we'll create this accountnumber : " +accountNumber);
                 var requestBody = {
                     "ShadowQuoteId": vOrderIds[key],
                     "HDAPAccountId": accountNumber
@@ -193,7 +204,6 @@ async function executeQuoteCompletionCallouts(isNewLogo, vOrderIds) {
             //pause
             await sleep(1000);
             //then repeat
-            accountNumber++;
         }
 
 
