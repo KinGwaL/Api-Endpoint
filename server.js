@@ -139,13 +139,15 @@ async function executeQuoteCompletionCallouts(isNewLogo, vOrderIds) {
 
         if (isNewLogo) {
             //get accountNumber watermark
-            var accountNumber;
-            conn.query("SELECT Id, AccountNumber FROM Account ORDER BY AccountNumber DESC LIMIT 1", function (err, result) {
+            var accountNumber = 900001;
+            conn.query("SELECT Id, Name, AccountNumber FROM Account ORDER BY AccountNumber DESC LIMIT 1", function (err, result) {
                 if (err) {
                     return console.error(err);
                 }
-                console.log("fetched account number watermark? : " + result.records[0]);
-                accountNumber = result.records[0] ? parseInt(result.records[0].AccountNumber) : 900001;
+                console.log(result.records);
+                if(result.records.length > 0){
+                    accountNumber = parseInt(result.records[0].AccountNumber);
+                }
                 console.log("fetched account number watermark? : " + accountNumber);
 
                 for (key in vOrderIds) {
