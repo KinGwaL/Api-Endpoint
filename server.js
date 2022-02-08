@@ -114,9 +114,9 @@ function doCPQProcessOrder(isNewLogo, request, response) {
         });
         console.log('first order record, is primary location? : '+orderData[0].account.primaryLocation);
         
-        var resMessage = 'mock process order response, working these vOrderIds : \n';
+        var resMessage = 'mock process order response, working these vOrderIds : ';
         for (key in orderData) {
-            resMessage = resMessage + orderData[key].vOrderId + '\n';
+            resMessage = resMessage + orderData[key].vOrderId + '  --  ';
         }
         resBody = {
             message: resMessage
@@ -151,9 +151,9 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
                 console.log("fetched our account number watermark? : " + accountNumber);
 
                 for (key in orderData) {
-
+                    console.log('new account iteration starting, any wait has finished');
                     accountNumber = accountNumber + 1; //next accountNumber
-                    console.log('iterating orderData, for '+orderData[key].account.accountName+' we\'ll create this new accountnumber : ' + accountNumber);
+                    console.log('for '+orderData[key].account.accountName+' we\'ll create this new accountnumber : ' + accountNumber);
                     console.log('this account is primary? : '+orderData[key].account.primaryLocation);
 
                     var requestBody = {
@@ -162,7 +162,7 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
                     };
                     var uri = '/VonShadowQuoteServices/';
                     //send account number to sfdc
-                    conn.apex.post(uri, requestBody, function (err, res, orderData, key) {
+                    conn.apex.post(uri, requestBody, async (err, res, orderData, key) => {
                         if (err) {
                             return console.error(err);
                         }
@@ -176,15 +176,16 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
                             "ShadowQuoteId": orderData[key].vOrderId,
                             "ZuoraAccountId": zuoraId
                         };
-                        conn.apex.post(uri, requestBody, function (err, res, orderData, key) {
+                        conn.apex.post(uri, requestBody, async (err, res, orderData, key) => {
                             if (err) {
                                 return console.error(err);
                             }
                             console.log('VonShadowQuoteServices has responded, ' + orderData[key].account.accountName + ' : set Zuora account Number to '+zuoraId+': ', res);
                         });
                     });
-
+                    console.log('new account iteration ending, will wait 5s');
                     await sleep(5000); //5 secs between location calls
+                    console.log('new account iteration ending, wait finished');
                 }
             });
         }
