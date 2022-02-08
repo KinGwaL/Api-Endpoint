@@ -181,8 +181,8 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
                                 return console.error(err);
                             }
                             console.log('VonShadowQuoteServices has responded, ' + orderData[key].account.accountName + ' : set Zuora account Number to '+zuoraId+': ', res);
-                        });
-                    });
+                        }.bind(this));
+                    }.bind(this));
 
                     sleep(2000).then(); //2 secs between location calls
                 }
