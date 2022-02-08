@@ -195,15 +195,17 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
 function getAccountNumber(conn){
     console.log('get account number watermark is called');
     var accountNumber = 900000;
-    conn.query("SELECT count(Id) FROM Account", function (err, result){
-        if (err) {
-            throw new Error('Get account number watermark failed: '+err);
-        }
-        console.log(result);
-        if(result.records[0].expr0){
-            accountNumber = accountNumber + result.records[0].expr0;
-        }
-        return accountNumber;
+    return new Promise((resolve, reject) => {
+        conn.query("SELECT count(Id) FROM Account", function (err, result){
+            if (err) {
+                reject(accountNumber);
+            }
+            console.log(result);
+            if(result.records[0].expr0){
+                accountNumber = accountNumber + result.records[0].expr0;
+            }
+            resolve(accountNumber);
+        });
     });
 }
 
