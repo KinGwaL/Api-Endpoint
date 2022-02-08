@@ -164,7 +164,7 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
                     //send account number to sfdc
                     conn.apex.post(uri, requestBody, async (err, res, orderData, key) => {
                         if (err) {
-                            return console.error(err);
+                            console.error('VonShadowQuoteServices has responded, ' + orderData[key].account.accountName + ' : set HDAP account Number to '+accountNumber+': ',err);
                         }
                         console.log('VonShadowQuoteServices has responded, ' + orderData[key].account.accountName + ' : set HDAP account Number to '+accountNumber+': ', res);
 
@@ -178,7 +178,7 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
                         };
                         conn.apex.post(uri, requestBody, async (err, res, orderData, key) => {
                             if (err) {
-                                return console.error(err);
+                                console.error('VonShadowQuoteServices has responded, ' + orderData[key].account.accountName + ' : set Zuora account Number to '+zuoraId+': ',err);
                             }
                             console.log('VonShadowQuoteServices has responded, ' + orderData[key].account.accountName + ' : set Zuora account Number to '+zuoraId+': ', res);
                         });
@@ -201,7 +201,7 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
             uri = '/VonUpdateSQStatus/';
             conn.apex.post(uri, requestBody, function (err, res) {
                 if (err) {
-                    return console.error(err);
+                    console.error('/VonUpdateSQStatus/ has responded, ' + orderData[key].account.accountName + ' location complete FAILED: ',err);
                 }
                 console.log('/VonUpdateSQStatus/ has responded, ' + orderData[key].account.accountName + ' location marked complete: ', res);
             });
