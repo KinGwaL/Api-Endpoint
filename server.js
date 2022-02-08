@@ -154,7 +154,7 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
                 console.log('for '+orderData[key].account.accountName+' we\'ll create this new accountnumber : ' + accountNumber);
                 console.log('this account is primary? : '+orderData[key].account.primaryLocation);
 
-                await makeHDAPIdCallout(conn, orderData[key], accountNumber);
+                const hdapCallResult = await makeHDAPIdCallout(conn, orderData[key], accountNumber);
 
                 //then
                 //make the new Zuora Account Id call to sfdc
@@ -216,13 +216,15 @@ function makeHDAPIdCallout(conn, order, accountNumber){
     };
     var uri = '/VonShadowQuoteServices/';
     //send account number to sfdc
-    conn.apex.post(uri, requestBody, function (err, res, order){
-        if (err) {
-            console.error('VonShadowQuoteServices has responded, ' + order.account.accountName + ' : set HDAP account Number to '+accountNumber+': ',err);
-            return err;
-        }
-        console.log('VonShadowQuoteServices has responded, ' + order.account.accountName + ' : set HDAP account Number to '+accountNumber+': ', res);
-        return res;
+    return new Promise((resolve, reject) => {
+        conn.apex.post(uri, requestBody, function (err, res, order){
+            if (err) {
+                console.error('VonShadowQuoteServices has responded, ' + order.account.accountName + ' : set HDAP account Number to '+accountNumber+': ',err);
+                reject(err);
+            }
+            console.log('VonShadowQuoteServices has responded, ' + order.account.accountName + ' : set HDAP account Number to '+accountNumber+': ', res);
+            resolve(res);
+        });
     });
 }
 
@@ -232,13 +234,15 @@ function makeZIdCallout(conn, order){
         "ShadowQuoteId": order.vOrderId,
         "ZuoraAccountId": zuoraId
     };
-    conn.apex.post(uri, requestBody, function (err, res, order){
-        if (err) {
-            console.error('VonShadowQuoteServices has responded, ' + order.account.accountName + ' : set Zuora account Number to '+zuoraId+': ',err);
-            return err;
-        }
-        console.log('VonShadowQuoteServices has responded, ' + order.account.accountName + ' : set Zuora account Number to '+zuoraId+': ', res);
-        return res;
+    return new Promise((resolve, reject) => {
+        conn.apex.post(uri, requestBody, function (err, res, order){
+            if (err) {
+                console.error('VonShadowQuoteServices has responded, ' + order.account.accountName + ' : set Zuora account Number to '+zuoraId+': ',err);
+                reject(err);
+            }
+            console.log('VonShadowQuoteServices has responded, ' + order.account.accountName + ' : set Zuora account Number to '+zuoraId+': ', res);
+            resolve(res);
+        });
     });
 }
 
