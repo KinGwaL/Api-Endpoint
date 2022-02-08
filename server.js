@@ -139,55 +139,32 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
 
         if (isNewLogo) {
             //get accountNumber watermark
-            var accountNumber = 900000;
-            conn.query("SELECT count(Id) FROM Account", async (err, result, sleep) => { //try an async callback
-                if (err) {
-                    return console.error(err);
-                }
-                console.log(result);
-                if(result.records[0].expr0){
-                    accountNumber = accountNumber + result.records[0].expr0;
-                }
-                console.log("fetched our account number watermark? : " + accountNumber);
+            var accountNumber;
+            try{
+                accountNumber = await getAccountNumber(conn);
+                console.log("account number watermark : " + accountNumber);
+            }catch (error){
+                throw new Error('Get account number watermark failed: '+error);
+            }
+            
 
-                for (key in orderData) {
-                    console.log('new account iteration starting, any wait has finished');
-                    accountNumber = accountNumber + 1; //next accountNumber
-                    console.log('for '+orderData[key].account.accountName+' we\'ll create this new accountnumber : ' + accountNumber);
-                    console.log('this account is primary? : '+orderData[key].account.primaryLocation);
+            for (key in orderData) {
+                console.log('new account iteration starting, any wait has finished');
+                accountNumber = accountNumber + 1; //next accountNumber
+                console.log('for '+orderData[key].account.accountName+' we\'ll create this new accountnumber : ' + accountNumber);
+                console.log('this account is primary? : '+orderData[key].account.primaryLocation);
 
-                    var requestBody = {
-                        "ShadowQuoteId": orderData[key].vOrderId,
-                        "HDAPAccountId": accountNumber
-                    };
-                    var uri = '/VonShadowQuoteServices/';
-                    //send account number to sfdc
-                    conn.apex.post(uri, requestBody, async (err, res, orderData, key) => {
-                        if (err) {
-                            console.error('VonShadowQuoteServices has responded, ' + orderData[key].account.accountName + ' : set HDAP account Number to '+accountNumber+': ',err);
-                        }
-                        console.log('VonShadowQuoteServices has responded, ' + orderData[key].account.accountName + ' : set HDAP account Number to '+accountNumber+': ', res);
+                await makeHDAPIdCallout(conn, orderData[key], accountNumber);
 
-                        //then
-                        //make the new Zuora Account Id call to sfdc
-                        /*** ALTHOUGH SFDC DOES ABSOLUTELY NOTHING WITH IT! JUST RETURNS A 200 OK LOL */
-                        var zuoraId = uuidv4();
-                        requestBody = {
-                            "ShadowQuoteId": orderData[key].vOrderId,
-                            "ZuoraAccountId": zuoraId
-                        };
-                        conn.apex.post(uri, requestBody, async (err, res, orderData, key) => {
-                            if (err) {
-                                console.error('VonShadowQuoteServices has responded, ' + orderData[key].account.accountName + ' : set Zuora account Number to '+zuoraId+': ',err);
-                            }
-                            console.log('VonShadowQuoteServices has responded, ' + orderData[key].account.accountName + ' : set Zuora account Number to '+zuoraId+': ', res);
-                        });
-                    });
-                    console.log('new account iteration ending, will wait 5s');
-                    await sleep(5000); //5 secs between location calls
-                    console.log('new account iteration ending, wait finished');
-                }
-            });
+                //then
+                //make the new Zuora Account Id call to sfdc
+                /*** ALTHOUGH SFDC DOES ABSOLUTELY NOTHING WITH IT! JUST RETURNS A 200 OK LOL */
+                await makeZIdCallout(conn, orderData[key]);
+                
+                console.log('new account iteration ending, will wait 5s');
+                await sleep(5000); //5 secs between location calls
+                console.log('new account iteration ending, wait finished');
+            }
         }
 
         //delay 10s for final complete calls
@@ -213,8 +190,58 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
     } else {
         console.log('process order completion calls - we dont have sfdc accessToken');
     }
-
 }
+
+function getAccountNumber(conn){
+    console.log('get account number watermark is called');
+    var accountNumber = 900000;
+    conn.query("SELECT count(Id) FROM Account", function (err, result){
+        if (err) {
+            throw new Error('Get account number watermark failed: '+err);
+        }
+        console.log(result);
+        if(result.records[0].expr0){
+            accountNumber = accountNumber + result.records[0].expr0;
+        }
+        return accountNumber;
+    });
+}
+
+function makeHDAPIdCallout(conn, order, accountNumber){
+    var requestBody = {
+        "ShadowQuoteId": order.vOrderId,
+        "HDAPAccountId": accountNumber
+    };
+    var uri = '/VonShadowQuoteServices/';
+    //send account number to sfdc
+    conn.apex.post(uri, requestBody, function (err, res, order){
+        if (err) {
+            console.error('VonShadowQuoteServices has responded, ' + order.account.accountName + ' : set HDAP account Number to '+accountNumber+': ',err);
+            return err;
+        }
+        console.log('VonShadowQuoteServices has responded, ' + order.account.accountName + ' : set HDAP account Number to '+accountNumber+': ', res);
+        return res;
+    });
+}
+
+function makeZIdCallout(conn, order){
+    var zuoraId = uuidv4();
+    requestBody = {
+        "ShadowQuoteId": order.vOrderId,
+        "ZuoraAccountId": zuoraId
+    };
+    conn.apex.post(uri, requestBody, function (err, res, order){
+        if (err) {
+            console.error('VonShadowQuoteServices has responded, ' + order.account.accountName + ' : set Zuora account Number to '+zuoraId+': ',err);
+            return err;
+        }
+        console.log('VonShadowQuoteServices has responded, ' + order.account.accountName + ' : set Zuora account Number to '+zuoraId+': ', res);
+        return res;
+    });
+}
+
+
+
 function sleep(ms) {
     return new Promise((resolve) => {
         setTimeout(resolve, ms);
