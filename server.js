@@ -167,15 +167,21 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
                 }).catch(function (error) {
                     console.log('VonShadowQuoteServices has responded : ', error);
                 });
-                var billingAccountId = await insertSFDCBillingAccount(conn, orderData[key], zuoraId).catch(function (error) {
+                var billingAccount = await insertSFDCBillingAccount(conn, orderData[key], zuoraId).catch(function (error) {
                     console.log('insert zBilling Account fake 360 result : ', error);
                 });
-                console.log('insert zBilling Account fake 360 result : ', billingAccountId);
-                await insertSFDCDefaultPM(conn, orderData[key], zuoraId, billingAccountId).then(function (result) {
-                    console.log('inserted default payment method record : ', result);
-                }).catch(function (error) {
-                    console.log('failed to insert default payment method record : ', error);
-                });
+                
+                if(billingAccount == undefined){
+                    console.log('insert zBilling Account fake 360 result : FAILED');
+                }else{
+                    console.log('insert zBilling Account fake 360 result : ', billingAccount.Id);
+                    await insertSFDCDefaultPM(conn, orderData[key], zuoraId, billingAccount.Id).then(function (result) {
+                        console.log('inserted default payment method record : ', result);
+                    }).catch(function (error) {
+                        console.log('failed to insert default payment method record : ', error);
+                    });
+                }
+                
 
                 console.log('new account iteration ending, will wait 5s');
                 await sleep(5000); //5 secs between location calls
@@ -268,10 +274,9 @@ function insertSFDCBillingAccount(conn, order, zuoraId) {
     return new Promise((resolve, reject) => {
         conn.sobject("Zuora__CustomerAccount__c").create(newBillingAccount, function (err, ret) {
             if (err || !ret.success) {
-                reject(err, ret);
+                reject(err);
             }
-            console.log("Created sfdc billing account, id : " + ret.id);
-            resolve(ret.id);
+            resolve(ret);
         });
     });
 }
