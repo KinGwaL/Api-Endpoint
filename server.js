@@ -98,9 +98,7 @@ app.listen(app.get('port'), function () {
 
         }).catch(function (error) {
             console.log(error.toJSON());
-        });;
-
-
+        });
 });
 
 
@@ -112,28 +110,26 @@ function doCPQProcessOrder(isNewLogo, request, response) {
         var orderData = request.body;
         orderData.sort(function(x, y) {
             // true values first
-            return (x.primaryLocation === y.primaryLocation)? 0 : x.primaryLocation? -1 : 1;
+            return (x.account.primaryLocation === y.account.primaryLocation)? 0 : x.account.primaryLocation? -1 : 1;
         });
-
-        var vOrderIds = [];
+        console.log('first order record, is primary location? : '+orderData[0].account.primaryLocation);
+        
+        var resMessage = 'mock process order response, working these vOrderIds : \n';
         for (key in orderData) {
-            vOrderIds.push(orderData[key].vOrderId);
+            resMessage = resMessage + orderData[key].vOrderId + '\n';
         }
         resBody = {
-            message: 'mock process order response, extracted these vOrderIds : ' + vOrderIds
+            message: resMessage
         };
         response.send(JSON.parse(JSON.stringify(resBody)));
     } else {
-        resBody = {
-            message: 'mock process order response'
-        };
-        response.send(JSON.parse(JSON.stringify(resBody)));
+        response.status(400).send('Bad Request');
     }
 
-    executeQuoteCompletionCallouts(isNewLogo, vOrderIds);
+    executeQuoteCompletionCallouts(isNewLogo, orderData);
 }
 
-async function executeQuoteCompletionCallouts(isNewLogo, vOrderIds) {
+async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
     if (sfdc_access_token) {
         var conn = new jsforce.Connection({
             instanceUrl: sfdc_instance_url,
@@ -154,11 +150,14 @@ async function executeQuoteCompletionCallouts(isNewLogo, vOrderIds) {
                 }
                 console.log("fetched our account number watermark? : " + accountNumber);
 
-                for (key in vOrderIds) {
+                for (key in orderData) {
+
                     accountNumber = accountNumber + 1; //next accountNumber
-                    console.log("iterating newlog vorderIds, we'll create this accountnumber : " + accountNumber);
+                    console.log('iterating orderData, for '+orderData[key].account.accountName+' we\'ll create this new accountnumber : ' + accountNumber);
+                    console.log('this account is primary? : '+orderData[key].account.primaryLocation);
+
                     var requestBody = {
-                        "ShadowQuoteId": vOrderIds[key],
+                        "ShadowQuoteId": orderData[key].vOrderId,
                         "HDAPAccountId": accountNumber
                     };
                     var uri = '/VonShadowQuoteServices/';
@@ -167,30 +166,35 @@ async function executeQuoteCompletionCallouts(isNewLogo, vOrderIds) {
                         if (err) {
                             return console.error(err);
                         }
-                        console.log('VonShadowQuoteServices, ' + vOrderIds[key] + ' : set hdapid response: ', res);
+                        console.log('VonShadowQuoteServices has responded, ' + orderData[key].account.accountName + ' : set HDAP account Number to '+accountNumber+': ', res);
 
                         //then
                         //make the new Zuora Account Id call to sfdc
+                        /*** ALTHOUGH SFDC DOES ABSOLUTELY NOTHING WITH IT! JUST RETURNS A 200 OK LOL */
                         var zuoraId = uuidv4();
                         requestBody = {
-                            "ShadowQuoteId": vOrderIds[key],
+                            "ShadowQuoteId": orderData[key].vOrderId,
                             "ZuoraAccountId": zuoraId
                         };
                         conn.apex.post(uri, requestBody, function (err, res) {
                             if (err) {
                                 return console.error(err);
                             }
-                            console.log('VonShadowQuoteServices, ' + vOrderIds[key] + ' : set zAccountId response: ', res);;
+                            console.log('VonShadowQuoteServices has responded, ' + orderData[key].account.accountName + ' : set Zuora account Number to '+zuoraId+': ', res);
                         });
                     });
+
+                    sleep(2000).then(); //2 secs between location calls
                 }
             });
         }
 
+        //delay 10s for final complete calls
+        sleep(10000);
         //make the updateSQStatus calls to sfdc
-        for (key in vOrderIds) {
+        for (key in orderData) {
             requestBody = {
-                "ShadowQuoteId": vOrderIds[key],
+                "ShadowQuoteId": orderData[key].vOrderId,
                 "Status": "Complete"
             };
             uri = '/VonUpdateSQStatus/';
@@ -198,12 +202,11 @@ async function executeQuoteCompletionCallouts(isNewLogo, vOrderIds) {
                 if (err) {
                     return console.error(err);
                 }
-                console.log('/VonUpdateSQStatus/, ' + vOrderIds[key] + ' : set status complete response: ', res);;
+                console.log('/VonUpdateSQStatus/ has responded, ' + orderData[key].account.accountName + ' location marked complete: ', res);
             });
 
-            //pause
-            await sleep(1000);
-            //then repeat
+            //send 1 call per 2 seconds
+            sleep(2000);
         }
 
     } else {
@@ -212,8 +215,8 @@ async function executeQuoteCompletionCallouts(isNewLogo, vOrderIds) {
 
 }
 
-function sleep(ms) {
-    return new Promise((resolve) => {
+async function sleep(ms) {
+    await new Promise((resolve) => {
         setTimeout(resolve, ms);
     });
 }
