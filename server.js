@@ -216,7 +216,7 @@ function makeHDAPIdCallout(conn, order, accountNumber){
     };
     var uri = '/VonShadowQuoteServices/';
     //send account number to sfdc
-    return new Promise((resolve, reject) => {
+    return new Promise(function(resolve, reject){
         conn.apex.post(uri, requestBody, function (err, res, order){
             if (err) {
                 console.error('VonShadowQuoteServices has responded, ' + order.account.accountName + ' : set HDAP account Number to '+accountNumber+': ',err);
@@ -234,7 +234,7 @@ function makeZIdCallout(conn, order){
         "ShadowQuoteId": order.vOrderId,
         "ZuoraAccountId": zuoraId
     };
-    return new Promise((resolve, reject) => {
+    return new Promise(function(resolve, reject){
         conn.apex.post(uri, requestBody, function (err, res, order){
             if (err) {
                 console.error('VonShadowQuoteServices has responded, ' + order.account.accountName + ' : set Zuora account Number to '+zuoraId+': ',err);
