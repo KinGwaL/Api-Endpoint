@@ -140,7 +140,7 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
         if (isNewLogo) {
             //get accountNumber watermark
             var accountNumber = 900000;
-            conn.query("SELECT count(Id) FROM Account", function (err, result, sleep) {
+            conn.query("SELECT count(Id) FROM Account", async (err, result, sleep) => { //try an async callback
                 if (err) {
                     return console.error(err);
                 }
