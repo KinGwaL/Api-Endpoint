@@ -139,13 +139,10 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
 
         if (isNewLogo) {
             //get accountNumber watermark
-            var accountNumber = await getAccountNumber(conn).then( function(result){
-                accountNumber = result;
-                console.log("account number watermark : " + accountNumber);
-            }).catch(function(error){
+            var accountNumber = await getAccountNumber(conn).catch(function(error){
                 throw new Error('Get account number watermark failed: '+error);
             });
-            
+            console.log("account number watermark : " + accountNumber);
 
             for (key in orderData) {
                 console.log('new account iteration starting, any wait has finished');
