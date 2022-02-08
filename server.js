@@ -140,7 +140,7 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
         if (isNewLogo) {
             //get accountNumber watermark
             var accountNumber = 900000;
-            conn.query("SELECT count(Id) FROM Account", function (err, result) {
+            conn.query("SELECT count(Id) FROM Account", function (err, result, sleep) {
                 if (err) {
                     return console.error(err);
                 }
@@ -162,7 +162,7 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
                     };
                     var uri = '/VonShadowQuoteServices/';
                     //send account number to sfdc
-                    conn.apex.post(uri, requestBody, function (err, res) {
+                    conn.apex.post(uri, requestBody, function (err, res, orderData, key) {
                         if (err) {
                             return console.error(err);
                         }
@@ -176,21 +176,21 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
                             "ShadowQuoteId": orderData[key].vOrderId,
                             "ZuoraAccountId": zuoraId
                         };
-                        conn.apex.post(uri, requestBody, function (err, res) {
+                        conn.apex.post(uri, requestBody, function (err, res, orderData, key) {
                             if (err) {
                                 return console.error(err);
                             }
                             console.log('VonShadowQuoteServices has responded, ' + orderData[key].account.accountName + ' : set Zuora account Number to '+zuoraId+': ', res);
-                        }.bind(this));
-                    }.bind(this));
+                        });
+                    });
 
-                    sleep(2000).then(); //2 secs between location calls
+                    await sleep(5000); //5 secs between location calls
                 }
             });
         }
 
         //delay 10s for final complete calls
-        sleep(10000);
+        await sleep(10000);
         //make the updateSQStatus calls to sfdc
         for (key in orderData) {
             requestBody = {
@@ -206,7 +206,7 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
             });
 
             //send 1 call per 2 seconds
-            sleep(2000);
+            await sleep(2000);
         }
 
     } else {
@@ -214,9 +214,8 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
     }
 
 }
-
-async function sleep(ms) {
-    await new Promise((resolve) => {
+function sleep(ms) {
+    return new Promise((resolve) => {
         setTimeout(resolve, ms);
     });
 }
