@@ -139,13 +139,12 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
 
         if (isNewLogo) {
             //get accountNumber watermark
-            var accountNumber;
-            try{
-                accountNumber = await getAccountNumber(conn);
+            var accountNumber = await getAccountNumber(conn).then( function(result){
+                accountNumber = result;
                 console.log("account number watermark : " + accountNumber);
-            }catch (error){
+            }).catch(function(error){
                 throw new Error('Get account number watermark failed: '+error);
-            }
+            });
             
 
             for (key in orderData) {
@@ -154,16 +153,23 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
                 console.log('for '+orderData[key].account.accountName+' we\'ll create this new accountnumber : ' + accountNumber);
                 console.log('this account is primary? : '+orderData[key].account.primaryLocation);
 
-                const hdapCallResult = await makeHDAPIdCallout(conn, orderData[key], accountNumber).catch();
-                console.log('VonShadowQuoteServices has responded : ', hdapCallResult);
+                const hdapCallResult = await makeHDAPIdCallout(conn, orderData[key], accountNumber).then( function(result){
+                    console.log('VonShadowQuoteServices has responded : ', result);
+                }).catch(function(error){
+                    console.log('VonShadowQuoteServices has responded : ', error);
+                });
+                
 
                 //then
                 //make the new Zuora Account Id call to sfdc
                 /*** ALTHOUGH SFDC DOES ABSOLUTELY NOTHING WITH IT! JUST RETURNS A 200 OK LOL */
                 var zuoraId = uuidv4();
                 console.log('for '+orderData[key].account.accountName+' we\'ll create this new zuora account Id : ' + zuoraId);
-                const zIdCallResult = await makeZIdCallout(conn, orderData[key], zuoraId).catch();
-                console.log('VonShadowQuoteServices has responded : ', zIdCallResult);
+                const zIdCallResult = await makeZIdCallout(conn, orderData[key], zuoraId).then( function(result){
+                    console.log('VonShadowQuoteServices has responded : ', result);
+                }).catch(function(error){
+                    console.log('VonShadowQuoteServices has responded : ', error);
+                });
                 
                 console.log('new account iteration ending, will wait 5s');
                 await sleep(5000); //5 secs between location calls
@@ -219,8 +225,8 @@ function makeHDAPIdCallout(conn, order, accountNumber){
     };
     var uri = '/VonShadowQuoteServices/';
     //send account number to sfdc
-    return new Promise(function(resolve, reject){
-        conn.apex.post(uri, requestBody, function (err, res, resolve, reject){
+    return new Promise((resolve, reject) => {
+        conn.apex.post(uri, requestBody, function (err, res){
             if (err) {
                 reject(err);
             }
@@ -234,8 +240,8 @@ function makeZIdCallout(conn, order, zuoraId){
         "ShadowQuoteId": order.vOrderId,
         "ZuoraAccountId": zuoraId
     };
-    return new Promise(function(resolve, reject){
-        conn.apex.post(uri, requestBody, function (err, res, resolve, reject){
+    return new Promise((resolve, reject) => {
+        conn.apex.post(uri, requestBody, function (err, res){
             if (err) {
                 reject(err);
             }
