@@ -154,7 +154,7 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
                 console.log('for '+orderData[key].account.accountName+' we\'ll create this new accountnumber : ' + accountNumber);
                 console.log('this account is primary? : '+orderData[key].account.primaryLocation);
 
-                const hdapCallResult = await makeHDAPIdCallout(conn, orderData[key], accountNumber);
+                const hdapCallResult = await makeHDAPIdCallout(conn, orderData[key], accountNumber).catch();
                 console.log('VonShadowQuoteServices has responded : ', hdapCallResult);
 
                 //then
@@ -162,7 +162,7 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
                 /*** ALTHOUGH SFDC DOES ABSOLUTELY NOTHING WITH IT! JUST RETURNS A 200 OK LOL */
                 var zuoraId = uuidv4();
                 console.log('for '+orderData[key].account.accountName+' we\'ll create this new zuora account Id : ' + zuoraId);
-                const zIdCallResult = await makeZIdCallout(conn, orderData[key], zuoraId);
+                const zIdCallResult = await makeZIdCallout(conn, orderData[key], zuoraId).catch();
                 console.log('VonShadowQuoteServices has responded : ', zIdCallResult);
                 
                 console.log('new account iteration ending, will wait 5s');
