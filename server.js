@@ -108,12 +108,12 @@ function doCPQProcessOrder(isNewLogo, request, response) {
     var resBody = {};
     if (request.body) {
         var orderData = request.body;
-        orderData.sort(function(x, y) {
+        orderData.sort(function (x, y) {
             // true values first
-            return (x.account.primaryLocation === y.account.primaryLocation)? 0 : x.account.primaryLocation? -1 : 1;
+            return (x.account.primaryLocation === y.account.primaryLocation) ? 0 : x.account.primaryLocation ? -1 : 1;
         });
-        console.log('first order record, is primary location? : '+orderData[0].account.primaryLocation);
-        
+        console.log('first order record, is primary location? : ' + orderData[0].account.primaryLocation);
+
         var resMessage = 'mock process order response, working these vOrderIds : ';
         for (key in orderData) {
             resMessage = resMessage + orderData[key].vOrderId + '  --  ';
@@ -139,40 +139,44 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
 
         if (isNewLogo) {
             //get accountNumber watermark
-            var accountNumber = await getAccountNumber(conn).catch(function(error){
-                throw new Error('Get account number watermark failed: '+error);
+            var accountNumber = await getAccountNumber(conn).catch(function (error) {
+                throw new Error('Get account number watermark failed: ' + error);
             });
             console.log("account number watermark : " + accountNumber);
 
             for (key in orderData) {
                 console.log('new account iteration starting, any wait has finished');
                 accountNumber = accountNumber + 1; //next accountNumber
-                console.log('for '+orderData[key].account.accountName+' we\'ll create this new accountnumber : ' + accountNumber);
-                console.log('this account is primary? : '+orderData[key].account.primaryLocation);
+                console.log('for ' + orderData[key].account.accountName + ' we\'ll create this new accountnumber : ' + accountNumber);
+                console.log('this account is primary? : ' + orderData[key].account.primaryLocation);
 
-                await makeHDAPIdCallout(conn, orderData[key], accountNumber).then( function(result){
+                await makeHDAPIdCallout(conn, orderData[key], accountNumber).then(function (result) {
                     console.log('VonShadowQuoteServices has responded : ', result);
-                }).catch(function(error){
+                }).catch(function (error) {
                     console.log('VonShadowQuoteServices has responded : ', error);
                 });
-                
+
 
                 //then
                 //make the new Zuora Account Id call to sfdc
                 /*** ALTHOUGH SFDC DOES ABSOLUTELY NOTHING WITH IT! JUST RETURNS A 200 OK LOL */
                 var zuoraId = uuidv4();
-                console.log('for '+orderData[key].account.accountName+' we\'ll create this new zuora account Id : ' + zuoraId);
-                await makeZIdCallout(conn, orderData[key], zuoraId).then( function(result){
+                console.log('for ' + orderData[key].account.accountName + ' we\'ll create this new zuora account Id : ' + zuoraId);
+                await makeZIdCallout(conn, orderData[key], zuoraId).then(function (result) {
                     console.log('VonShadowQuoteServices has responded : ', result);
-                }).catch(function(error){
+                }).catch(function (error) {
                     console.log('VonShadowQuoteServices has responded : ', error);
                 });
-                await insertSFDCBillingAccount(conn, order, zuoraId).then( function(result){
-                    console.log('insert zBilling Account fake 360 result : ', result);
-                }).catch(function(error){
+                var billingAccountId = await insertSFDCBillingAccount(conn, order, zuoraId).catch(function (error) {
                     console.log('insert zBilling Account fake 360 result : ', error);
                 });
-                
+                console.log('insert zBilling Account fake 360 result : ', billingAccountId);
+                await insertSFDCDefaultPM(conn, orderData[key], zuoraId, billingAccountId).then(function (result) {
+                    console.log('inserted default payment method record : ', result);
+                }).catch(function (error) {
+                    console.log('failed to insert default payment method record : ', error);
+                });
+
                 console.log('new account iteration ending, will wait 5s');
                 await sleep(5000); //5 secs between location calls
                 console.log('new account iteration ending, wait finished');
@@ -190,7 +194,7 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
             uri = '/VonUpdateSQStatus/';
             conn.apex.post(uri, requestBody, function (err, res) {
                 if (err) {
-                    console.error('/VonUpdateSQStatus/ has responded, ' + orderData[key].account.accountName + ' location complete FAILED: ',err);
+                    console.error('/VonUpdateSQStatus/ has responded, ' + orderData[key].account.accountName + ' location complete FAILED: ', err);
                 }
                 console.log('/VonUpdateSQStatus/ has responded, ' + orderData[key].account.accountName + ' location marked complete: ', res);
             });
@@ -204,15 +208,15 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
     }
 }
 
-function getAccountNumber(conn){
+function getAccountNumber(conn) {
     console.log('get account number watermark is called');
     var accountNumber = 900000;
     return new Promise((resolve, reject) => {
-        conn.query("SELECT count(Id) FROM Account", function (err, result){
+        conn.query("SELECT count(Id) FROM Account", function (err, result) {
             if (err) {
                 reject(accountNumber);
             }
-            if(result.records[0].expr0){
+            if (result.records[0].expr0) {
                 accountNumber = accountNumber + result.records[0].expr0;
             }
             resolve(accountNumber);
@@ -220,7 +224,7 @@ function getAccountNumber(conn){
     });
 }
 
-function makeHDAPIdCallout(conn, order, accountNumber){
+function makeHDAPIdCallout(conn, order, accountNumber) {
     var requestBody = {
         "ShadowQuoteId": order.vOrderId,
         "HDAPAccountId": accountNumber
@@ -228,7 +232,7 @@ function makeHDAPIdCallout(conn, order, accountNumber){
     var uri = '/VonShadowQuoteServices/';
     //send account number to sfdc
     return new Promise((resolve, reject) => {
-        conn.apex.post(uri, requestBody, function (err, res){
+        conn.apex.post(uri, requestBody, function (err, res) {
             if (err) {
                 reject(err);
             }
@@ -237,14 +241,14 @@ function makeHDAPIdCallout(conn, order, accountNumber){
     });
 }
 
-function makeZIdCallout(conn, order, zuoraId){
+function makeZIdCallout(conn, order, zuoraId) {
     var requestBody = {
         "ShadowQuoteId": order.vOrderId,
         "ZuoraAccountId": zuoraId
     };
     var uri = '/VonShadowQuoteServices/';
     return new Promise((resolve, reject) => {
-        conn.apex.post(uri, requestBody, function (err, res){
+        conn.apex.post(uri, requestBody, function (err, res) {
             if (err) {
                 reject(err);
             }
@@ -253,20 +257,58 @@ function makeZIdCallout(conn, order, zuoraId){
     });
 }
 
-function insertSFDCBillingAccount(conn, order, zuoraId){
+function insertSFDCBillingAccount(conn, order, zuoraId) {
 
-   console.log('insertSFDCBillingAccount is called for zId: '+zuoraId);
-   const newBillingAccount = { 
-       Name : order.account.accountName,
-       Zuora__Zuora_Id__c: zuoraId,
-       Zuora__Account__c: order.account.crmAccountId
-     };
+    console.log('insertSFDCBillingAccount is called for zId: ' + zuoraId);
+    const newBillingAccount = {
+        Name: order.account.accountName,
+        Zuora__Zuora_Id__c: zuoraId,
+        Zuora__Account__c: order.account.crmAccountId
+    };
     return new Promise((resolve, reject) => {
-        conn.sobject("Zuora__CustomerAccount__c").create( newBillingAccount, function(err, ret) {
-            if (err || !ret.success) { 
-                reject(err, ret); 
+        conn.sobject("Zuora__CustomerAccount__c").create(newBillingAccount, function (err, ret) {
+            if (err || !ret.success) {
+                reject(err, ret);
             }
             console.log("Created sfdc billing account, id : " + ret.id);
+            resolve(ret.id);
+        });
+    });
+}
+
+function insertSFDCDefaultPM(conn, order, zuoraId, billingAccountId) {
+
+    console.log('insertSFDCDefaultPM is called for account: ' + order.account.accountName);
+    var newPM = {
+        Name: zuoraId,
+        Zuora__BillingAccount__c: billingAccountId,
+        Zuora__DefaultPaymentMethod__c: true,
+        Zuora__UseDefaultRetryRule__c: true,
+        Zuora__PaymentMethodStatus__c: 'Active',
+        Zuora__Email__c: order.salesContact.emailAddress,
+    };
+    if (order.paymentMethodType === 'CreditCard') {
+        newPM["Zuora__Type__c"] = 'CreditCard';
+        newPM["Zuora__CreditCardType__c"] = 'Visa';
+        newPM["Zuora__CreditCardCountry__c"] = order.billingLocation.address.countryCode;
+        newPM["Zuora__CreditCardState__c"] = order.billingLocation.address.province;
+        newPM["Zuora__LastTransactionStatus__c"] = 'Approved';
+        newPM["Zuora__CreditCardHolderName__c"] = order.billingLocation.contact.firstName+' '+order.billingLocation.contact.lastName;
+        newPM["Zuora__BankIdentificationNumber__c"] = 444444;
+        newPM["Zuora__CreditCardExpirationMonth__c"] = 4;
+        newPM["Zuora__CreditCardAddress1__c"] = order.billingLocation.address.addressLine1;
+        newPM["Zuora__CreditCardExpirationYear__c"] = 2024;
+        newPM["Zuora__CreditCardPostalCode__c"] = order.billingLocation.address.postalCode;
+        newPM["Zuora__CreditCardMaskNumber__c"] = '************4448';
+        newPM["Zuora__CreditCardCity__c"] = order.billingLocation.address.city;
+    } else if(order.paymentMethodType === 'Check') {
+        newPM["Zuora__Type__c"] = 'Check';
+    }
+    return new Promise((resolve, reject) => {
+        conn.sobject("	Zuora__PaymentMethod__c").create(newPM, function (err, ret) {
+            if (err || !ret.success) {
+                reject(err, ret);
+            }
             resolve(ret.id);
         });
     });
