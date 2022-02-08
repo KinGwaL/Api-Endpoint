@@ -150,7 +150,7 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
                 console.log('for '+orderData[key].account.accountName+' we\'ll create this new accountnumber : ' + accountNumber);
                 console.log('this account is primary? : '+orderData[key].account.primaryLocation);
 
-                const hdapCallResult = await makeHDAPIdCallout(conn, orderData[key], accountNumber).then( function(result){
+                await makeHDAPIdCallout(conn, orderData[key], accountNumber).then( function(result){
                     console.log('VonShadowQuoteServices has responded : ', result);
                 }).catch(function(error){
                     console.log('VonShadowQuoteServices has responded : ', error);
@@ -162,7 +162,7 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
                 /*** ALTHOUGH SFDC DOES ABSOLUTELY NOTHING WITH IT! JUST RETURNS A 200 OK LOL */
                 var zuoraId = uuidv4();
                 console.log('for '+orderData[key].account.accountName+' we\'ll create this new zuora account Id : ' + zuoraId);
-                const zIdCallResult = await makeZIdCallout(conn, orderData[key], zuoraId).then( function(result){
+                await makeZIdCallout(conn, orderData[key], zuoraId).then( function(result){
                     console.log('VonShadowQuoteServices has responded : ', result);
                 }).catch(function(error){
                     console.log('VonShadowQuoteServices has responded : ', error);
@@ -233,10 +233,11 @@ function makeHDAPIdCallout(conn, order, accountNumber){
 }
 
 function makeZIdCallout(conn, order, zuoraId){
-    requestBody = {
+    var requestBody = {
         "ShadowQuoteId": order.vOrderId,
         "ZuoraAccountId": zuoraId
     };
+    var uri = '/VonShadowQuoteServices/';
     return new Promise((resolve, reject) => {
         conn.apex.post(uri, requestBody, function (err, res){
             if (err) {
