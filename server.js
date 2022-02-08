@@ -220,7 +220,7 @@ function makeHDAPIdCallout(conn, order, accountNumber){
     var uri = '/VonShadowQuoteServices/';
     //send account number to sfdc
     return new Promise(function(resolve, reject){
-        conn.apex.post(uri, requestBody, function (err, res, order){
+        conn.apex.post(uri, requestBody, function (err, res, resolve, reject){
             if (err) {
                 reject(err);
             }
@@ -235,7 +235,7 @@ function makeZIdCallout(conn, order, zuoraId){
         "ZuoraAccountId": zuoraId
     };
     return new Promise(function(resolve, reject){
-        conn.apex.post(uri, requestBody, function (err, res, order){
+        conn.apex.post(uri, requestBody, function (err, res, resolve, reject){
             if (err) {
                 reject(err);
             }
