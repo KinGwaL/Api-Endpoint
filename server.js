@@ -155,11 +155,15 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
                 console.log('this account is primary? : '+orderData[key].account.primaryLocation);
 
                 const hdapCallResult = await makeHDAPIdCallout(conn, orderData[key], accountNumber);
+                console.log('VonShadowQuoteServices has responded : ', hdapCallResult);
 
                 //then
                 //make the new Zuora Account Id call to sfdc
                 /*** ALTHOUGH SFDC DOES ABSOLUTELY NOTHING WITH IT! JUST RETURNS A 200 OK LOL */
-                await makeZIdCallout(conn, orderData[key]);
+                var zuoraId = uuidv4();
+                console.log('for '+orderData[key].account.accountName+' we\'ll create this new zuora account Id : ' + zuoraId);
+                const zIdCallResult = await makeZIdCallout(conn, orderData[key], zuoraId);
+                console.log('VonShadowQuoteServices has responded : ', zIdCallResult);
                 
                 console.log('new account iteration ending, will wait 5s');
                 await sleep(5000); //5 secs between location calls
@@ -200,7 +204,6 @@ function getAccountNumber(conn){
             if (err) {
                 reject(accountNumber);
             }
-            console.log(result);
             if(result.records[0].expr0){
                 accountNumber = accountNumber + result.records[0].expr0;
             }
@@ -219,17 +222,14 @@ function makeHDAPIdCallout(conn, order, accountNumber){
     return new Promise(function(resolve, reject){
         conn.apex.post(uri, requestBody, function (err, res, order){
             if (err) {
-                console.error('VonShadowQuoteServices has responded, ' + order.account.accountName + ' : set HDAP account Number to '+accountNumber+': ',err);
                 reject(err);
             }
-            console.log('VonShadowQuoteServices has responded, ' + order.account.accountName + ' : set HDAP account Number to '+accountNumber+': ', res);
             resolve(res);
         });
     });
 }
 
-function makeZIdCallout(conn, order){
-    var zuoraId = uuidv4();
+function makeZIdCallout(conn, order, zuoraId){
     requestBody = {
         "ShadowQuoteId": order.vOrderId,
         "ZuoraAccountId": zuoraId
@@ -237,10 +237,8 @@ function makeZIdCallout(conn, order){
     return new Promise(function(resolve, reject){
         conn.apex.post(uri, requestBody, function (err, res, order){
             if (err) {
-                console.error('VonShadowQuoteServices has responded, ' + order.account.accountName + ' : set Zuora account Number to '+zuoraId+': ',err);
                 reject(err);
             }
-            console.log('VonShadowQuoteServices has responded, ' + order.account.accountName + ' : set Zuora account Number to '+zuoraId+': ', res);
             resolve(res);
         });
     });
