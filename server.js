@@ -167,6 +167,11 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
                 }).catch(function(error){
                     console.log('VonShadowQuoteServices has responded : ', error);
                 });
+                await insertSFDCBillingAccount(conn, order, zuoraId).then( function(result){
+                    console.log('insert zBilling Account fake 360 result : ', result);
+                }).catch(function(error){
+                    console.log('insert zBilling Account fake 360 result : ', error);
+                });
                 
                 console.log('new account iteration ending, will wait 5s');
                 await sleep(5000); //5 secs between location calls
@@ -244,6 +249,25 @@ function makeZIdCallout(conn, order, zuoraId){
                 reject(err);
             }
             resolve(res);
+        });
+    });
+}
+
+function insertSFDCBillingAccount(conn, order, zuoraId){
+
+   console.log('insertSFDCBillingAccount is called for zId: '+zuoraId);
+   const newBillingAccount = { 
+       Name : order.account.accountName,
+       Zuora__Zuora_Id__c: zuoraId,
+       Zuora__Account__c: order.account.crmAccountId
+     };
+    return new Promise((resolve, reject) => {
+        conn.sobject("Zuora__CustomerAccount__c").create( newBillingAccount, function(err, ret) {
+            if (err || !ret.success) { 
+                reject(err, ret); 
+            }
+            console.log("Created sfdc billing account, id : " + ret.id);
+            resolve(ret.id);
         });
     });
 }
