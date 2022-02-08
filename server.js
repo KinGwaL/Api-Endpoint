@@ -167,7 +167,7 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
                 }).catch(function (error) {
                     console.log('VonShadowQuoteServices has responded : ', error);
                 });
-                var billingAccountId = await insertSFDCBillingAccount(conn, order, zuoraId).catch(function (error) {
+                var billingAccountId = await insertSFDCBillingAccount(conn, orderData[key], zuoraId).catch(function (error) {
                     console.log('insert zBilling Account fake 360 result : ', error);
                 });
                 console.log('insert zBilling Account fake 360 result : ', billingAccountId);
