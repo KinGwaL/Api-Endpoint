@@ -184,13 +184,11 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
                 
 
                 console.log('new account iteration ending, will wait 5s');
-                await sleep(5000); //5 secs between location calls
+                await sleep(2000); //2 secs between location calls
                 console.log('new account iteration ending, wait finished');
             }
         }
 
-        //delay 10s for final complete calls
-        await sleep(10000);
         //make the updateSQStatus calls to sfdc
         for (key in orderData) {
             requestBody = {
@@ -205,8 +203,8 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
                 console.log('/VonUpdateSQStatus/ has responded, ' + orderData[key].account.accountName + ' location marked complete: ', res);
             });
 
-            //send 1 call per 2 seconds
-            await sleep(2000);
+            //send 1 call per 20 seconds
+            await sleep(20000);
         }
 
     } else {
