@@ -167,20 +167,20 @@ async function executeQuoteCompletionCallouts(isNewLogo, orderData) {
                 }).catch(function (error) {
                     console.log('VonShadowQuoteServices has responded : ', error);
                 });
-                var billingAccount = await insertSFDCBillingAccount(conn, orderData[key], zuoraId).catch(function (error) {
-                    console.log('insert zBilling Account fake 360 result : ', error);
-                });
+                // var billingAccount = await insertSFDCBillingAccount(conn, orderData[key], zuoraId).catch(function (error) {
+                //     console.log('insert zBilling Account fake 360 result : ', error);
+                // });
                 
-                if(billingAccount == undefined){
-                    console.log('insert zBilling Account fake 360 result : FAILED');
-                }else{
-                    console.log('insert zBilling Account fake 360 result : ', billingAccount.Id);
-                    await insertSFDCDefaultPM(conn, orderData[key], zuoraId, billingAccount.Id).then(function (result) {
-                        console.log('inserted default payment method record : ', result);
-                    }).catch(function (error) {
-                        console.log('failed to insert default payment method record : ', error);
-                    });
-                }
+                // if(billingAccount == undefined){
+                //     console.log('insert zBilling Account fake 360 result : FAILED');
+                // }else{
+                //     console.log('insert zBilling Account fake 360 result : ', billingAccount.Id);
+                //     await insertSFDCDefaultPM(conn, orderData[key], zuoraId, billingAccount.Id).then(function (result) {
+                //         console.log('inserted default payment method record : ', result);
+                //     }).catch(function (error) {
+                //         console.log('failed to insert default payment method record : ', error);
+                //     });
+                // }
                 
 
                 console.log('new account iteration ending, will wait 5s');
@@ -263,61 +263,61 @@ function makeZIdCallout(conn, order, zuoraId) {
     });
 }
 
-function insertSFDCBillingAccount(conn, order, zuoraId) {
+// function insertSFDCBillingAccount(conn, order, zuoraId) {
 
-    console.log('insertSFDCBillingAccount is called for zId: ' + zuoraId);
-    const newBillingAccount = {
-        Name: order.account.accountName,
-        Zuora__Zuora_Id__c: zuoraId,
-        Zuora__Account__c: order.account.crmAccountId
-    };
-    return new Promise((resolve, reject) => {
-        conn.sobject("Zuora__CustomerAccount__c").create(newBillingAccount, function (err, ret) {
-            if (err || !ret.success) {
-                reject(err);
-            }
-            resolve(ret);
-        });
-    });
-}
+//     console.log('insertSFDCBillingAccount is called for zId: ' + zuoraId);
+//     const newBillingAccount = {
+//         Name: order.account.accountName,
+//         Zuora__Zuora_Id__c: zuoraId,
+//         Zuora__Account__c: order.account.crmAccountId
+//     };
+//     return new Promise((resolve, reject) => {
+//         conn.sobject("Zuora__CustomerAccount__c").create(newBillingAccount, function (err, ret) {
+//             if (err || !ret.success) {
+//                 reject(err);
+//             }
+//             resolve(ret);
+//         });
+//     });
+// }
 
-function insertSFDCDefaultPM(conn, order, zuoraId, billingAccountId) {
+// function insertSFDCDefaultPM(conn, order, zuoraId, billingAccountId) {
 
-    console.log('insertSFDCDefaultPM is called for account: ' + order.account.accountName);
-    var newPM = {
-        Name: zuoraId,
-        Zuora__BillingAccount__c: billingAccountId,
-        Zuora__DefaultPaymentMethod__c: true,
-        Zuora__UseDefaultRetryRule__c: true,
-        Zuora__PaymentMethodStatus__c: 'Active',
-        Zuora__Email__c: order.salesContact.emailAddress,
-    };
-    if (order.paymentMethodType === 'CreditCard') {
-        newPM["Zuora__Type__c"] = 'CreditCard';
-        newPM["Zuora__CreditCardType__c"] = 'Visa';
-        newPM["Zuora__CreditCardCountry__c"] = order.billingLocation.address.countryCode;
-        newPM["Zuora__CreditCardState__c"] = order.billingLocation.address.province;
-        newPM["Zuora__LastTransactionStatus__c"] = 'Approved';
-        newPM["Zuora__CreditCardHolderName__c"] = order.billingLocation.contact.firstName+' '+order.billingLocation.contact.lastName;
-        newPM["Zuora__BankIdentificationNumber__c"] = 444444;
-        newPM["Zuora__CreditCardExpirationMonth__c"] = 4;
-        newPM["Zuora__CreditCardAddress1__c"] = order.billingLocation.address.addressLine1;
-        newPM["Zuora__CreditCardExpirationYear__c"] = 2024;
-        newPM["Zuora__CreditCardPostalCode__c"] = order.billingLocation.address.postalCode;
-        newPM["Zuora__CreditCardMaskNumber__c"] = '************4448';
-        newPM["Zuora__CreditCardCity__c"] = order.billingLocation.address.city;
-    } else if(order.paymentMethodType === 'Check') {
-        newPM["Zuora__Type__c"] = 'Check';
-    }
-    return new Promise((resolve, reject) => {
-        conn.sobject("	Zuora__PaymentMethod__c").create(newPM, function (err, ret) {
-            if (err || !ret.success) {
-                reject(err, ret);
-            }
-            resolve(ret.id);
-        });
-    });
-}
+//     console.log('insertSFDCDefaultPM is called for account: ' + order.account.accountName);
+//     var newPM = {
+//         Name: zuoraId,
+//         Zuora__BillingAccount__c: billingAccountId,
+//         Zuora__DefaultPaymentMethod__c: true,
+//         Zuora__UseDefaultRetryRule__c: true,
+//         Zuora__PaymentMethodStatus__c: 'Active',
+//         Zuora__Email__c: order.salesContact.emailAddress,
+//     };
+//     if (order.paymentMethodType === 'CreditCard') {
+//         newPM["Zuora__Type__c"] = 'CreditCard';
+//         newPM["Zuora__CreditCardType__c"] = 'Visa';
+//         newPM["Zuora__CreditCardCountry__c"] = order.billingLocation.address.countryCode;
+//         newPM["Zuora__CreditCardState__c"] = order.billingLocation.address.province;
+//         newPM["Zuora__LastTransactionStatus__c"] = 'Approved';
+//         newPM["Zuora__CreditCardHolderName__c"] = order.billingLocation.contact.firstName+' '+order.billingLocation.contact.lastName;
+//         newPM["Zuora__BankIdentificationNumber__c"] = 444444;
+//         newPM["Zuora__CreditCardExpirationMonth__c"] = 4;
+//         newPM["Zuora__CreditCardAddress1__c"] = order.billingLocation.address.addressLine1;
+//         newPM["Zuora__CreditCardExpirationYear__c"] = 2024;
+//         newPM["Zuora__CreditCardPostalCode__c"] = order.billingLocation.address.postalCode;
+//         newPM["Zuora__CreditCardMaskNumber__c"] = '************4448';
+//         newPM["Zuora__CreditCardCity__c"] = order.billingLocation.address.city;
+//     } else if(order.paymentMethodType === 'Check') {
+//         newPM["Zuora__Type__c"] = 'Check';
+//     }
+//     return new Promise((resolve, reject) => {
+//         conn.sobject("	Zuora__PaymentMethod__c").create(newPM, function (err, ret) {
+//             if (err || !ret.success) {
+//                 reject(err, ret);
+//             }
+//             resolve(ret.id);
+//         });
+//     });
+// }
 
 
 
